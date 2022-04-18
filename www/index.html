@@ -4,13 +4,82 @@
 <head>
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  
+  <!-- Mobile Friendly -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <title>Countdown</title>
   <meta name="description" content="Eine super Countdown-PWA" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" type="text/css" href="/styles/index.css">
+
+	<!-- Javascript -->
+	<!-- <script>
+		if ("serviceWorker" in navigator) {
+			window.addEventListener("load", () => {
+				navigator.serviceWorker?.register("/service-worker.js")
+          .then(() => console.log("Service Worker registered."))
+          .catch((error) => console.error("Error during Service Worker registration: ", error));
+			});
+		}
+	</script> -->
 </head>
 
 <body>
-  <div id="app"></div>
+  <noscript>
+    Um diese Anwendung zu nutzen muss Javascript aktiviert sein.
+  </noscript>
+
+  <div class="main-wrapper">
+    <div class="main">
+
+      <div id="timerWrapper" class="timer-wrapper">
+        <div class="time-left-label">
+          noch
+        </div>
+
+        <div class="time-left-time">
+          <span id="timeLeft">0 min</span>
+        </div>
+  
+        <div class="end-time">
+          <span>endet </span>
+          <span id="endTime" class="end-time-time"></span>
+        </div>
+  
+        <div class="progress">
+          <div id="progressbar" class="progress-bar" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" aria-roledescription="Fortschritt"></div>
+        </div>
+      </div>
+
+      <div class="current-time" aria-roledescription="Aktuelle Zeit">
+        <span id="currentTime">00:00:00</span>
+      </div>
+
+    </div>
+
+    <button id="openModalButton" class="button button-secondary rounded focusable shadow">Reset</button>
+  </div>
+
+  <!-- Der Dialog / Topbar - Container, der dunkleren Hintergrund und Dialogfenster zusammenfasst -->
+  <div id="modalContainer" class="modal-container">
+    <!-- Der dunkle Hintergrund, der auch auf Klicks außerhalb des Dialogs reagieren soll -->
+    <div id="modalBg" class="modal-bg"></div>
+    <!-- Der eigentliche Dialog -->
+    <div class="modal" role="dialog">
+      <label for="inputDate">End-Datum</label>
+      <input id="inputDate" class="focusable shadow" type="date" name="date" />
+  
+      <label for="inputTime">End-Uhrzeit</label>
+      <input id="inputTime" class="focusable shadow" type="time" name="time" />
+  
+      <button id="settingsSubmitButton" class="button button-primary rounded focusable shadow" type="submit">OK</button>
+    </div>
+  </div>
+
+	<!-- Javascript -->
+  <script src="/main.js"></script>
 </body>
 
 </html>
