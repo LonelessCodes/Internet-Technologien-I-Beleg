@@ -1,0 +1,36 @@
+/*
+HTML hat vor einer ganzen Weile das <dialog>-Element bekommen, um solche Modals
+zu vereinfachen, da sie eine Menge Standardfunktionalität bieten.
+Es ist aber trotzdem lange nicht perfekt. z.B. ist es nicht sehr barrierefrei
+und hat einfach ein paar unschöne Effekte, die aber fixbar sind, und daher
+doch besser, als sich selbst ein Modal-System zu basteln.
+*/
+
+/* Mache den Hintergrund nicht scrollbar, wenn Modal geöffnet ist */
+html:has(dialog[open][modal]) {
+  overflow: hidden;
+}
+
+dialog {
+  background-color: var(--white-color);
+  color: var(--text-color);
+
+  transform: translate(0, 100px);
+  /* ease-in für modal schließen */
+  transition: transform 200ms var(--ease-in), opacity 200ms linear;
+}
+
+dialog:not([open]) {
+  pointer-events: none;
+  opacity: 0;
+}
+
+dialog::backdrop {
+  transition: background-color 200ms linear;
+  background-color: rgb(18 36 51 / 10%);
+}
+
+dialog[open] {
+  transform: translate(0, 0);
+  transition: transform 200ms var(--ease-out), opacity 200ms linear;
+}

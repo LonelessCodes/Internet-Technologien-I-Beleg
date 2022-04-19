@@ -12,12 +12,10 @@ const timeLeftElem = document.getElementById("timeLeft");
 /** @type {HTMLButtonElement} */
 const openModalButton = document.getElementById("openModalButton");
 /** @type {HTMLButtonElement} */
-const settingsSubmitButton = document.getElementById("settingsSubmitButton");
+const settingsSubmitButton = document.getElementById("settingsSubmit");
 
-/** @type {HTMLDivElement} */
-const modalContainerElem = document.getElementById("modalContainer");
-/** @type {HTMLDivElement} */
-const modalBgElem = document.getElementById("modalBg");
+/** @type {HTMLDialogElement} */
+const modalElem = document.getElementById("modal");
 
 /** @type {HTMLInputElement} */
 const inputDate = document.getElementById("inputDate");
@@ -74,6 +72,62 @@ function dateToHumanDate(date) {
 function setIntervalRunInstantly(func, timeout) {
   return func(), setInterval(func, timeout);
 }
+
+/**
+ * Warte bis alle Animationen auf einem Element/Animatable ihre Promises
+ * erfüllt haben.
+ * @param {Animatable} element 
+ * @returns {Promise<PromiseSettledResult<Animation>[]>}
+ */
+function waitForAnimationsToComplete(element) {
+  return Promise.allSettled(
+    element.getAnimations().map(animation => animation.finished)
+  );
+}
+
+/*
+ * Dialog Funktionalität
+ * 
+ * Das <dialog>-Element, was uns HTML5 gibt, hat einige Probleme. Zum einen ist
+ * es schwer animierbar, zusätzlich ist es nicht sehr barrierefrei, und das allerschlimmste:
+ * in Chrome for Android werden keine "close"- und "cancel"-Events gefeuert!
+ * Diese Funktionalitäten versuche ich hier zurückzuerlangen.
+ */
+
+const dialogClosingEvent = new Event("closing");
+const dialogClosedEvent = new Event("closed");
+const dialogOpeningEvent = new Event("opening");
+const dialogOpenedEvent = new Event("opened");
+
+// Verfolge das Öffnen des Dialogs / Ändern des open-Attributs
+const dialogAttrObserver = new MutationObserver((mutations) => {
+  mutations.forEach(async mutation => {
+    if (mutation.attributeName === "open") {
+      const dialog = mutation.target;
+
+      const isOpen = dialog.hasAttribute("open");
+      if (isOpen) {
+        dialog.removeAttribute("inert");
+  
+        dialog.dispatchEvent(dialogOpeningEvent);
+        await waitForAnimationsToComplete(dialog);
+        dialog.dispatchEvent(dialogOpenedEvent);
+      } else {
+        // Wir lauschen, wann das "open"-Attribut entfernt wird, statt das
+        // offizielle "close"-Event, da dieses in Chrome for Android nicht
+        // gefeuert wird. Deswegen machen wir unser eigenes "closing"- und "closed"-Event
+        dialog.setAttribute("inert", "");
+
+        dialog.dispatchEvent(dialogClosingEvent);
+        await waitForAnimationsToComplete(dialog);
+        dialog.dispatchEvent(dialogClosedEvent);
+      }
+    }
+  })
+});
+dialogAttrObserver.observe(modalElem, { 
+  attributes: true,
+});
 
 /**
  * States und State-Management
@@ -168,30 +222,30 @@ function loadTimer() {
   timerTick();
 }
 
-function closeModal() {
-  modalContainerElem.classList.remove("modal-container-open");
-  document.body.blur();
-}
+/*
+Validiere Eingabe in Modal, und disable OK-Button wenn date oder
+time nicht gesetzt sit
+*/
 
-function openModal() {
-  modalContainerElem.classList.add("modal-container-open");
-  inputDate.focus();
-}
-
-settingsSubmitButton.addEventListener("click", () => {
+function validateInput() {
   const date = inputDate.value;
   const time = inputTime.value;
 
-  if (date === "" || time === "") {
-    return;
+  if (date !== "" && time !== "") {
+    settingsSubmitButton.disabled = false;
+  } else {
+    settingsSubmitButton.disabled = true;
   }
+}
 
-  setTimer(new Date(), new Date(`${date} ${time}`));
-
-  closeModal();
-});
+inputDate.addEventListener("change", validateInput);
+inputTime.addEventListener("change", validateInput);
 
 openModalButton.addEventListener("click", () => {
+  modalElem.showModal();
+});
+
+modalElem.addEventListener("opening", () => {
   /*
   Setze die Form auf Standardwerte bevor öffnen des Modals
    */
@@ -203,11 +257,18 @@ openModalButton.addEventListener("click", () => {
   inputDate.value = dateToHumanDate(date);
   inputTime.value = dateToHumanTime(date);
 
-  openModal();
+  validateInput();
 });
 
-modalBgElem.addEventListener("click", () => {
-  closeModal();
+modalElem.addEventListener("closing", () => {
+  if (modalElem.returnValue === "submit") {
+    // Dank der Eingabevalidierung sollte beim Submit der Daten
+    // keine Empty-String-Felder geben
+    const date = inputDate.value;
+    const time = inputTime.value;
+
+    setTimer(new Date(), new Date(`${date} ${time}`));
+  }
 });
 
 setIntervalRunInstantly(() => {

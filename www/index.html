@@ -65,21 +65,18 @@
     <button id="openModalButton" class="button button-secondary rounded focusable shadow">Reset</button>
   </div>
 
-  <!-- Der Dialog / Topbar - Container, der dunkleren Hintergrund und Dialogfenster zusammenfasst -->
-  <div id="modalContainer" class="modal-container">
-    <!-- Der dunkle Hintergrund, der auch auf Klicks außerhalb des Dialogs reagieren soll -->
-    <div id="modalBg" class="modal-bg"></div>
-    <!-- Der eigentliche Dialog -->
-    <div class="modal" role="dialog">
+  <!-- Der Dialog / Topbar -->
+  <dialog id="modal" class="modal" inert modal>
+    <form method="dialog">
       <label for="inputDate">End-Datum</label>
-      <input id="inputDate" class="focusable shadow" type="date" name="date" />
+      <input id="inputDate" class="focusable shadow" type="date" name="date" autofocus />
   
       <label for="inputTime">End-Uhrzeit</label>
       <input id="inputTime" class="focusable shadow" type="time" name="time" />
   
       <button id="settingsSubmitButton" class="button button-primary rounded focusable shadow" type="submit">OK</button>
-    </div>
-  </div>
+    </form>
+  </dialog>
 </body>
 
 </html>

@@ -3,23 +3,21 @@ Variablen
 */
 
 :root {
-  --unit: 0.25rem;
-
-  --font-size: 16px;
   /* Nutze (wenn möglich) Systemfont. Quelle: https://css-tricks.com/snippets/css/system-font-stack/ */
-  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, Noto Sans, "Helvetica Neue", sans-serif;
+  --font-size: 16px;
 
   /* CSS HEX */
-  --onyx: #393e41;
-  --platinum: #e7e5df;
-  /* --border-color: #e5e7eb; */
-  --border-color: var(--platinum);
 
-  --text-color: var(--onyx);
-  --text-color-light: var(--onyx);
 
-  /* --shadow:  */
+  /* brand foundation */
+  /* keppel: hsl(168, 47%, 50%); */
+  --brand-hue: 171;
+
+  --text-color:               hsl(var(--brand-hue) 20% 20%);
+  --text-color-light:         hsl(var(--brand-hue) 10% 35%);
+
+  --border-color:             hsl(var(--brand-hue) 14% 90%);
 }
 
 
@@ -32,6 +30,8 @@ Prevent padding and border from affecting element width. (https://github.com/moz
 ::before,
 ::after {
   box-sizing: border-box;
+  border-width: 0;
+  border-style: solid;
 }
 
 
