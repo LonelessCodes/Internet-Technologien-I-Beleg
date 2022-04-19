@@ -15,9 +15,32 @@ dialog {
   background-color: var(--white-color);
   color: var(--text-color);
 
+  /* display: block setzen, damit Transitions funktionieren */
+  display: block;
+  /* position: fixed setzen, damit Dialog nicht unsichtbar herumliegt und Platz wegnimmt */
+  position: fixed;
+  /* inset: 0 muss (aus irgendeinen Grund) gesetzt werden, damit die close-Animation angezeigt wird */
+  inset: 0;
+
+  max-width: min(90vw, 60ch);
+  max-height: min(88vh, 100%);
+  margin: 6vh auto auto auto;
+  padding: 0;
+
+  z-index: 100;
+  overflow: hidden;
+  border-radius: var(--border-radius-xl);
+  
+  box-shadow: var(--shadow-lg);
+
   transform: translate(0, 100px);
   /* ease-in für modal schließen */
   transition: transform 200ms var(--ease-in), opacity 200ms linear;
+}
+
+dialog[open] {
+  transform: translate(0, 0);
+  transition: transform 200ms var(--ease-out), opacity 200ms linear;
 }
 
 dialog:not([open]) {
@@ -26,11 +49,54 @@ dialog:not([open]) {
 }
 
 dialog::backdrop {
-  transition: background-color 200ms linear;
-  background-color: rgb(18 36 51 / 10%);
+  background-color: var(--modal-background-color);
 }
 
-dialog[open] {
-  transform: translate(0, 0);
-  transition: transform 200ms var(--ease-out), opacity 200ms linear;
+/* Dialoginhalt */
+
+dialog > form {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  align-items: start;
+  max-block-size: 88vh;
+}
+
+dialog > form > * {
+  padding: 1rem 1.25rem;
+}
+
+dialog > form > header {
+  background-color: var(--surface-light-gray-color);
+}
+dialog > form > header > h3 {
+  line-height: 1rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-light-color);
+}
+
+dialog > form > section {
+  overflow-y: auto; 
+  max-block-size: 100%; /* safari */
+  overscroll-behavior-y: contain;
+  display: grid;
+  justify-items: flex-start;
+  gap: 1rem;
+}
+
+dialog > form > footer {
+  display: flex;
+  /* siehe Kommentar in HTML */
+  flex-direction: row-reverse;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+dialog > form > footer > div {
+  display: flex;
+  /* siehe Kommentar in HTML */
+  flex-direction: row-reverse;
+  flex-wrap: wrap;
+  gap: 1rem;
 }

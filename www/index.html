@@ -56,7 +56,7 @@
       </div>
     </div>
 
-    <button id="openModalButton" class="button button-secondary rounded focusable shadow">Reset</button>
+    <button id="openModalButton" class="button-primary round focusable shadow">Einstellungen</button>
   </main>
 
   <noscript>
@@ -70,13 +70,31 @@
   <!-- Der Dialog / Topbar -->
   <dialog id="modal">
     <form method="dialog">
-      <label for="inputDate">End-Datum</label>
-      <input id="inputDate" class="focusable shadow" type="date" name="date" autofocus />
-  
-      <label for="inputTime">End-Uhrzeit</label>
-      <input id="inputTime" class="focusable shadow" type="time" name="time" />
-  
-      <button id="settingsSubmitButton" class="button button-primary rounded focusable shadow" type="submit">OK</button>
+      <header>
+        <h3>⚙️ Einstellungen</h3>
+      </header>
+
+      <section>
+        <label for="inputDate">End-Datum</label>
+        <input id="inputDate" class="focusable shadow" type="date" name="date" autofocus tabindex="1" />
+    
+        <label for="inputTime">End-Uhrzeit</label>
+        <input id="inputTime" class="focusable shadow" type="time" name="time" tabindex="2" />
+      </section>
+      
+      <footer>
+        <!-- Wenn jemand mit Enter die Form submitted, wird dafür der erste Button in der
+             Form genutzt, statt (was mehr Sinn ergeben würde) den ersten Button mit type=submit.
+             Deswegen müssen die Elemente in der falschen Reihenfolge im DOM angelegt,
+             und dann mit CSS und tabindex wieder in die richtige Reihenfolge gebracht werden. -->
+        <div>
+          <button id="settingsSubmit" class="button-primary focusable shadow" type="submit" value="submit" disabled tabindex="5">OK</button>
+          <button class="button-secondary focusable shadow" value="cancel" tabindex="4">Abbrechen</button>
+        </div>
+        <div>
+          <button class="button-secondary focusable shadow" value="clear" tabindex="3">Clear Timer</button>
+        </div>
+      </footer>
     </form>
   </dialog>
 </body>

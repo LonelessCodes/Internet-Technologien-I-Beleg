@@ -2,33 +2,86 @@
 Variablen
 */
 
-:root {
+/* Weil ::backdrop Kind keines Elements ist,
+   können die Variablen nicht von :root gefetched werden, sondern müssen
+   direkt am Element definiert werden.
+   https://fullscreen.spec.whatwg.org/#::backdrop-pseudo-element */
+:root,
+::backdrop {
   /* Nutze (wenn möglich) Systemfont. Quelle: https://css-tricks.com/snippets/css/system-font-stack/ */
   --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, Noto Sans, "Helvetica Neue", sans-serif;
   --font-size: 16px;
 
   /* CSS HEX */
+  --orange-soda: hsl(10, 85%, 61%);
+  --isabelline: hsl(18, 22%, 91%);
+  --gainsboro: hsl(60, 1%, 85%);
+  --black-olive: hsl(72, 10%, 20%);
+  --vivid-sky-blue: hsl(197, 78%, 64%);
 
+  /* CSS HEX */
+  --paradise-pink: hsl(347, 83%, 60%);
+  --russian-violet: hsl(252, 51%, 24%);
+  --rich-black-fogra-39: hsl(156, 20%, 5%);
+  --silver-sand: hsl(171, 6%, 78%);
+  --tiffany-blue: hsl(175, 51%, 48%);
+
+  /* CSS HEX */
+  --onyx: hsl(203, 7%, 24%);
+  --timberwolf: hsl(38, 8%, 81%);
+  --platinum: hsl(45, 14%, 89%);
+  --keppel: hsl(168, 47%, 50%);
+  --maize-crayola: hsl(44, 78%, 58%);
 
   /* brand foundation */
-  /* keppel: hsl(168, 47%, 50%); */
   --brand-hue: 171;
 
   /* brand colors */
   --white-color:              white;
 
   --text-color:               hsl(var(--brand-hue) 20% 20%);
-  --text-color-light:         hsl(var(--brand-hue) 10% 35%);
+  --text-light-color:         hsl(var(--brand-hue) 10% 35%);
+
+  --surface-primary-color:    hsl(var(--brand-hue) 80% 44%);
+  --surface-primary-color-l:  hsl(var(--brand-hue) 70% 55%);
+  --surface-primary-color-d:  hsl(var(--brand-hue) 100% 36%);
+  
+  --surface-light-gray-color: hsl(var(--brand-hue) 10% 97%);
+  --surface-gray-color:       hsl(var(--brand-hue) 10% 90%);
 
   --modal-background-color:   hsl(var(--brand-hue) 50% 15% / 0.1);
 
   --border-color:             hsl(var(--brand-hue) 14% 90%);
+
+  --focus-ring-color:         hsl(var(--brand-hue) 84% 78% / 0.8);
+  --focus-border-color:       hsl(var(--brand-hue) 66% 50%);
+
   /* brand borders */
+  --border-radius:        0.375rem;
   --border-radius-xl:     1rem;
+  --border-radius-round:  100vmax;
 
   /* brand shadows  */
+  --no-shadow: 0 0 rgb(0 0 0 / 0);
+  --shadow-sm: 0 1px  3px  0     rgb(0 0 0 / 0.1), 0 1px  2px  0px  rgb(0 0 0 / 0.06);
+  --shadow-md: 0 10px 15px -3px  rgb(0 0 0 / 0.1), 0 4px  6px  -2px rgb(0 0 0 / 0.05);
   --shadow-lg: 0 20px 25px -5px  rgb(0 0 0 / 0.1), 0 10px 10px -5px rgb(0 0 0 / 0.04);
+  --shadow-xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+
+  /* brand transitions - cubic in and out */
+  --ease-in:      cubic-bezier(0.32, 0, 0.67, 0);
+  --ease-out:     cubic-bezier(0.33, 1, 0.68, 1);
+  --ease-in-out:  cubic-bezier(0.4, 0, 0.2, 1);
+
+  --duration: 200ms;
+  --duration-quick: 100ms;
 }
+
+
+/*
+Setze Styling von Elementen auf einen einheitlichen und sinnvollen Standard.
+Der meiste Code dafür kommt von TailwindCSS.
+*/
 
 
 /*
@@ -54,10 +107,9 @@ Prevent padding and border from affecting element width. (https://github.com/moz
 
 html {
   line-height: 1.5; /* 1 */
+  -webkit-text-size-adjust: 100%; /* 2 */
+  -moz-tab-size: 4; /* 3 */
   tab-size: 4; /* 3 */
-  font-size: var(--font-size);
-  font-family: var(--font-sans);
-  color: var(--text-color);
 }
 
 
@@ -72,6 +124,33 @@ body {
 
 
 /*
+Remove the default font size and weight for headings.
+*/
+
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+
+/*
+Add the correct font weight in Edge and Safari.
+*/
+
+
+b,
+strong {
+  font-weight: bolder;
+}
+
+
+/*
 1. Change the font styles in all browsers.
 2. Remove the margin in Firefox and Safari.
 3. Remove default padding in all browsers.
@@ -79,12 +158,9 @@ body {
 
 
 button,
-input,
-optgroup,
-select,
-textarea {
+input {
   font-family: inherit; /* 1 */
-  font-size: 100%; /* 1 */
+  font-size: 87.5%; /* 1 */
   line-height: inherit; /* 1 */
   color: inherit; /* 1 */
   margin: 0; /* 2 */
@@ -97,8 +173,7 @@ Remove the inheritance of text transform in Edge and Firefox.
 */
 
 
-button,
-select {
+button {
   text-transform: none;
 }
 
@@ -120,6 +195,52 @@ button,
 
 
 /*
+Use the modern Firefox focus style for all focusable elements.
+*/
+
+
+:-moz-focusring {
+  outline: auto;
+}
+
+
+/*
+Remove the additional `:invalid` styles in Firefox. (https://github.com/mozilla/gecko-dev/blob/2f9eacd9d3d995c937b4251a5557d95d494c9be1/layout/style/res/forms.css#L728-L737)
+*/
+
+
+:-moz-ui-invalid {
+  box-shadow: none;
+}
+
+
+/*
+Add the correct vertical alignment in Chrome and Firefox.
+*/
+
+
+progress {
+  vertical-align: baseline;
+}
+
+
+/*
+Removes the default spacing and border for appropriate elements.
+*/
+
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0;
+}
+
+
+/*
 Set the default cursor for buttons.
 */
 
@@ -137,14 +258,4 @@ Make sure disabled buttons don't get the pointer cursor.
 
 :disabled {
   cursor: default;
-}
-
-
-/*
-Ensure the default browser behavior of the `hidden` attribute.
-*/
-
-
-[hidden] {
-  display: none;
 }

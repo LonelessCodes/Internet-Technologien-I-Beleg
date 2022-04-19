@@ -265,6 +265,9 @@ modalElem.addEventListener("closing", () => {
 
     setTimer(new Date(), new Date(`${date} ${time}`));
   }
+  else if (modalElem.returnValue === "clear") {
+    clearTimer();
+  }
 });
 
 setIntervalRunInstantly(() => {

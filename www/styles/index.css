@@ -1,6 +1,43 @@
 @import "base.css";
-
+@import "button.css";
 @import "dialog.css";
+
+html {
+  background-color: var(--white-color);
+  color: var(--text-color);
+  font-size: var(--font-size);
+  font-family: var(--font-sans);
+}
+
+/*
+Für viele CSS-Properties gibt es einzeln veränderbare Teile wie
+border-color für border, padding-left für padding usw.
+Bei box-shadow ist es aber nicht möglich einzeln verschiedene Shadows auf
+dem selben Element zu ändern. Deswegen haben wir eine Klasse, die box-shadow
+für den Focus-Ring und den normalen shadow setzen kann, und dann die Werte der
+Variablen einsetzt, wenn diese auf dem Element gesetzt werden (z.B. über .focusable)
+
+So löst es z.B. Tailwind CSS
+*/
+.shadow {
+  box-shadow:
+    var(--ring-shadow, var(--no-shadow)),
+    var(--shadow, var(--no-shadow));
+}
+
+/*
+Eine Utility-Klasse um einen Focus-Ring um ein Element zu zaubern, wenn
+dieses fokusiert ist
+*/
+.focusable {
+  --ring-shadow: var(--no-shadow);
+}
+.focusable:focus {
+  --ring-shadow: 0 0 0 3px var(--focus-ring-color);
+  border-color: var(--focus-border-color);
+}
+
+/* here was button */
 
 main {
   width: 100%;
