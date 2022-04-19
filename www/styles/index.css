@@ -1,15 +1,16 @@
 @import "base.css";
 
 @import "dialog.css";
-.main-wrapper {
+
+main {
   width: 100%;
   max-width: 1000px;
+  height: 100vh;
   margin: 0 auto;
+  padding: 1rem 1.5rem;
   position: relative;
 }
-
-.main {
-  padding: calc(var(--unit) * 4) calc(var(--unit) * 6);
+.main-content {
   text-align: center;
 }
 
