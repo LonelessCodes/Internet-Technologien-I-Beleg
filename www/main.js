@@ -107,8 +107,6 @@ const dialogAttrObserver = new MutationObserver((mutations) => {
 
       const isOpen = dialog.hasAttribute("open");
       if (isOpen) {
-        dialog.removeAttribute("inert");
-  
         dialog.dispatchEvent(dialogOpeningEvent);
         await waitForAnimationsToComplete(dialog);
         dialog.dispatchEvent(dialogOpenedEvent);
@@ -116,8 +114,6 @@ const dialogAttrObserver = new MutationObserver((mutations) => {
         // Wir lauschen, wann das "open"-Attribut entfernt wird, statt das
         // offizielle "close"-Event, da dieses in Chrome for Android nicht
         // gefeuert wird. Deswegen machen wir unser eigenes "closing"- und "closed"-Event
-        dialog.setAttribute("inert", "");
-
         dialog.dispatchEvent(dialogClosingEvent);
         await waitForAnimationsToComplete(dialog);
         dialog.dispatchEvent(dialogClosedEvent);

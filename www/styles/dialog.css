@@ -7,7 +7,7 @@ doch besser, als sich selbst ein Modal-System zu basteln.
 */
 
 /* Mache den Hintergrund nicht scrollbar, wenn Modal geöffnet ist */
-html:has(dialog[open][modal]) {
+html:has(dialog[open]) {
   overflow: hidden;
 }
 
