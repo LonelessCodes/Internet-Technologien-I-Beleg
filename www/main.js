@@ -30,6 +30,7 @@ const START_DATE_KEY = "startDate";
  */
 
 /**
+ * Füge führende Nullen zu einem Wert hinzu
  * @param {number} value 
  * @param {number} width Die Mindestlänge der Ausgabe
  * @returns {string}
@@ -39,15 +40,17 @@ function pad(value, width) {
 }
 
 /**
+ * Wenn der String nicht leer oder null ist, parse ihn als Date,
+ * ansonsten gib null zurück.
  * @param {string|null} date 
  * @returns {Date|null}
  */
 function parseDate(date) {
-  return date && new Date(date);
+  return date ? new Date(date) : null;
 }
 
 /**
- * Konvertiert ein Date in HH:mm Format
+ * Konvertiert ein Date in HH:mm[:ss] Format
  * @param {Date} date 
  * @param {boolean} seconds Ob die Sekunden angezeigt werden sollen
  * @returns {string}
@@ -69,6 +72,13 @@ function dateToHumanDate(date) {
   return `${pad(date.getFullYear(), 4)}-${pad(date.getMonth() + 1, 2)}-${pad(date.getDate(), 2)}`
 }
 
+/**
+ * Setze einen Interval-Timer und führe die gegebene Funktion
+ * auch sofort aus
+ * @param {TimerHandler} func 
+ * @param {number} timeout 
+ * @returns {number}
+ */
 function setIntervalRunInstantly(func, timeout) {
   return func(), setInterval(func, timeout);
 }
