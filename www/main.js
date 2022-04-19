@@ -1,5 +1,5 @@
 /** @type {HTMLDivElement} */
-const timerWrapperElem = document.getElementById("timerWrapper");
+const timerElem = document.getElementById("timer");
 /** @type {HTMLDivElement} */
 const currentTimeElem = document.getElementById("currentTime");
 /** @type {HTMLDivElement} */
@@ -185,7 +185,7 @@ function clearTimer() {
   startOfCountdown = null;
   localStorage.clear();
   clearTimeout(timerTimeout);
-  timerWrapperElem.classList.remove("timer-wrapper-show");
+  timerElem.classList.remove("timer-wrapper-show");
 }
 
 /**
@@ -200,7 +200,7 @@ function setTimer(startDate, endDate) {
   localStorage.setItem(START_DATE_KEY, startDate.toISOString());
 
   endTimeElem.innerText = `${dateToHumanTime(endOfCountdown)}`;
-  timerWrapperElem.classList.add("timer-wrapper-show");
+  timerElem.classList.add("timer-wrapper-show");
   timerTick();
 }
 
@@ -214,7 +214,7 @@ function loadTimer() {
   }
 
   endTimeElem.innerText = `${dateToHumanTime(endOfCountdown)}`;
-  timerWrapperElem.classList.add("timer-wrapper-show");
+  timerElem.classList.add("timer-wrapper-show");
   timerTick();
 }
 
