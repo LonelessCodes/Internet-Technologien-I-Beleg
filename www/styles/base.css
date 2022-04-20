@@ -53,6 +53,7 @@ Variablen
   --modal-background-color:   hsl(var(--brand-hue) 50% 15% / 0.1);
 
   --border-color:             hsl(var(--brand-hue) 14% 90%);
+  --border-color-darker:      hsl(var(--brand-hue) 13% 83%);
 
   --focus-ring-color:         hsl(var(--brand-hue) 84% 78% / 0.8);
   --focus-border-color:       hsl(var(--brand-hue) 66% 50%);
@@ -68,6 +69,9 @@ Variablen
   --shadow-md: 0 10px 15px -3px  rgb(0 0 0 / 0.1), 0 4px  6px  -2px rgb(0 0 0 / 0.05);
   --shadow-lg: 0 20px 25px -5px  rgb(0 0 0 / 0.1), 0 10px 10px -5px rgb(0 0 0 / 0.04);
   --shadow-xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+  
+  --no-shadow-inset: inset 0 0 rgb(0 0 0 / 0);
+  --shadow-inset:    inset 0 1px 3px 0 rgb(0 0 0 / 0.1), inset 0 1px 2px 0px rgb(0 0 0 / 0.06);
 
   /* brand transitions - cubic in and out */
   --ease-in:      cubic-bezier(0.32, 0, 0.67, 0);
