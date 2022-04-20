@@ -13,38 +13,37 @@ button {
   outline: 2px solid transparent;
   outline-offset: 2px;
 
-  transition-property: all;
-  transition-timing-function: var(--ease-in-out);
-  transition-duration: 100ms;
+  --trans-duration: var(--duration-quick);
+  transition:
+    box-shadow        var(--trans-duration) var(--ease-in-out),
+    transform         var(--trans-duration) var(--ease-in-out),
+    background-color  var(--trans-duration) var(--ease-in-out);
 }
-button:hover {
-  /* transform: scale(1.03); */
+button:not(:disabled):hover {
   --shadow: var(--shadow-md);
 }
-button:active {
-  --shadow: var(--no-shadow);
+button:not(:disabled):active {
   transform: scale(0.97);
-  transition-duration: 50ms;
-}
-
-button.round {
-  border-radius: var(--border-radius-round);
+  --shadow: var(--no-shadow);
+  --trans-duration: var(--duration-quicker);
 }
 
 button.button-primary {
   background-color: var(--surface-primary-color);
   color: var(--white-color);
 }
-button.button-primary:hover {
+button.button-primary:not(:disabled):hover {
   background-color: var(--surface-primary-color-l);
 }
-button.button-primary:active {
+button.button-primary:not(:disabled):active {
   background-color: var(--surface-primary-color-d);
 }
 
-button:disabled,
-button:disabled:hover,
-button:disabled:active {
-  background-color: var(--surface-color-80);
+button:disabled {
+  background-color: var(--surface-disabled-color);
   --shadow: var(--no-shadow);
+}
+
+button.round {
+  border-radius: var(--border-radius-round);
 }

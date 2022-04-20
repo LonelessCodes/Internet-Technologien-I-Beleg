@@ -48,6 +48,7 @@ Variablen
   
   --surface-light-gray-color: hsl(var(--brand-hue) 10% 97%);
   --surface-gray-color:       hsl(var(--brand-hue) 10% 90%);
+  --surface-disabled-color:   hsl(var(--brand-hue) 10% 85%);
 
   --modal-background-color:   hsl(var(--brand-hue) 50% 15% / 0.1);
 
@@ -75,6 +76,7 @@ Variablen
 
   --duration: 200ms;
   --duration-quick: 100ms;
+  --duration-quicker: 50ms;
 }
 
 
