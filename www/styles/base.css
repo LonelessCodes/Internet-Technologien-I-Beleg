@@ -27,7 +27,7 @@
   --surface-gray-color:       hsl(var(--brand-hue) 10% 90%);
   --surface-disabled-color:   hsl(var(--brand-hue) 10% 85%);
 
-  --modal-background-color:   hsl(var(--brand-hue) 50% 15% / 0.1);
+  --dialog-background-color:  hsl(var(--brand-hue) 50% 15% / 0.1);
 
   --border-color:             hsl(var(--brand-hue) 14% 90%);
   --border-color-darker:      hsl(var(--brand-hue) 13% 83%);

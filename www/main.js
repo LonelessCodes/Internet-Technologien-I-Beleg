@@ -12,12 +12,12 @@ const progressbarElem = document.getElementById("progressbar");
 const currentTimeElem = document.getElementById("currentTime");
 
 /** @type {HTMLButtonElement} */
-const openModalButton = document.getElementById("openModalButton");
+const openDialogButton = document.getElementById("openDialogButton");
 /** @type {HTMLButtonElement} */
 const settingsSubmitButton = document.getElementById("settingsSubmit");
 
 /** @type {HTMLDialogElement} */
-const modalElem = document.getElementById("modal");
+const dialogElem = document.getElementById("dialog");
 
 /** @type {HTMLInputElement} */
 const inputDate = document.getElementById("inputDate");
@@ -108,7 +108,7 @@ const dialogAttrObserver = new MutationObserver((mutations) => {
     }
   })
 });
-dialogAttrObserver.observe(modalElem, { 
+dialogAttrObserver.observe(dialogElem, { 
   attributes: true,
 });
 
@@ -194,7 +194,7 @@ const timer = {
     this.endOfCountdown   = null;
     localStorage.clear();
   
-    openModalButton.innerText = "Setze einen Timer";
+    openDialogButton.innerText = "Setze einen Timer";
     timerElem.classList.remove("timer-wrapper-show");
   },
 
@@ -211,7 +211,7 @@ const timer = {
     localStorage.setItem(START_DATE_KEY, startDate.toISOString());
 
     endTimeElem.innerText = `${dateToHumanTime(this.endOfCountdown)}`;
-    openModalButton.innerText = "Einstellungen";
+    openDialogButton.innerText = "Einstellungen";
     timerElem.classList.add("timer-wrapper-show");
     timerNochElem.classList.remove("timer-noch-text-hide");
   
@@ -234,7 +234,7 @@ const timer = {
 };
 
 /*
-Validiere Eingabe in Modal, und disable OK-Button wenn date oder
+Validiere Eingabe in Dialog, und disable OK-Button wenn date oder
 time nicht gesetzt sit
 */
 
@@ -252,13 +252,13 @@ function validateInput() {
 inputDate.addEventListener("change", validateInput);
 inputTime.addEventListener("change", validateInput);
 
-openModalButton.addEventListener("click", () => {
-  modalElem.showModal();
+openDialogButton.addEventListener("click", () => {
+  dialogElem.showModal();
 });
 
-modalElem.addEventListener("opening", () => {
+dialogElem.addEventListener("opening", () => {
   /*
-  Setze die Form auf Standardwerte bevor öffnen des Modals
+  Setze die Form auf Standardwerte bevor öffnen des Dialogs
    */
   const date = new Date();
 
@@ -271,8 +271,8 @@ modalElem.addEventListener("opening", () => {
   validateInput();
 });
 
-modalElem.addEventListener("closing", () => {
-  if (modalElem.returnValue === "submit") {
+dialogElem.addEventListener("closing", () => {
+  if (dialogElem.returnValue === "submit") {
     // Dank der Eingabevalidierung sollte beim Submit der Daten
     // keine Empty-String-Felder geben
     const date = inputDate.value;
@@ -280,7 +280,7 @@ modalElem.addEventListener("closing", () => {
 
     timer.set(new Date(), new Date(`${date} ${time}`));
   }
-  else if (modalElem.returnValue === "clear") {
+  else if (dialogElem.returnValue === "clear") {
     timer.clear();
   }
 });

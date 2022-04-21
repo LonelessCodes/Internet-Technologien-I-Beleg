@@ -1,12 +1,12 @@
 /*
-HTML hat vor einer ganzen Weile das <dialog>-Element bekommen, um solche Modals
+HTML hat vor einer ganzen Weile das <dialog>-Element bekommen, um solche Dialoge
 zu vereinfachen, da sie eine Menge Standardfunktionalität bieten.
 Es ist aber trotzdem lange nicht perfekt. z.B. ist es nicht sehr barrierefrei
 und hat einfach ein paar unschöne Effekte, die aber fixbar sind, und daher
-doch besser, als sich selbst ein Modal-System zu basteln.
+doch besser, als sich selbst ein Dialog-System zu basteln.
 */
 
-/* Mache den Hintergrund nicht scrollbar, wenn Modal geöffnet ist */
+/* Mache den Hintergrund nicht scrollbar, wenn Dialog geöffnet ist */
 html:has(dialog[open]) {
   overflow: hidden;
 }
@@ -35,12 +35,13 @@ dialog {
   box-shadow: var(--shadow-lg);
 
   transform: translate(0, 100px);
-  /* ease-in für modal schließen */
+  /* ease-in für Dialog schließen */
   transition: transform var(--duration) var(--ease-in), opacity var(--duration) linear;
 }
 
 dialog[open] {
   transform: translate(0, 0);
+  /* ease-out für Dialog öffnen */
   transition: transform var(--duration) var(--ease-out), opacity var(--duration) linear;
 }
 
@@ -50,7 +51,7 @@ dialog:not([open]) {
 }
 
 dialog::backdrop {
-  background-color: var(--modal-background-color);
+  background-color: var(--dialog-background-color);
 }
 
 /* Dialoginhalt */
