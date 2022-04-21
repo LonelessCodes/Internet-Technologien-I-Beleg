@@ -1,0 +1,26 @@
+{
+  "lang": "de-DE",
+  "dir": "ltr",
+  "short_name": "Countdown",
+  "name": "Countdown PWA",
+  "description": "Eine super Countdown-PWA",
+  "icons": [
+    {
+      "src": "/icons/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "id": "/",
+  "start_url": "/",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#14b89f",
+  "background_color": "#ffffff"
+}

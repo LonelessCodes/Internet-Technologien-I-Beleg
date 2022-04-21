@@ -2,30 +2,39 @@
 <html lang="de">
 
 <head>
+  <title>Countdown PWA</title>
   <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  
+
   <!-- Mobile Friendly -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
 
-  <title>Countdown</title>
-  <meta name="description" content="Eine super Countdown-PWA" />
+  <!-- Mobile Manifest -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="description" content="Eine super Countdown-PWA">
+  <meta name="apple-mobile-web-app-title" content="Countdown PWA">
+  <meta name="application-name" content="Countdown PWA">
+  <meta name="theme-color" content="#14b89f">
+  <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+  <link rel="mask-icon" href="/icons/safari-pinned-tab.svg" color="#14b89f">
+  <link rel="shortcut icon" href="/favicon.ico">
 
   <!-- Styles -->
   <link rel="stylesheet" type="text/css" href="/styles/index.css">
 
-	<!-- Javascript -->
-	<!-- <script>
-		if ("serviceWorker" in navigator) {
-			window.addEventListener("load", () => {
-				navigator.serviceWorker?.register("/service-worker.js")
-          .then(() => console.log("Service Worker registered."))
-          .catch((error) => console.error("Error during Service Worker registration: ", error));
-			});
-		}
-	</script> -->
+  <!-- Javascript -->
+  <script>
+    // Service Worker registrieren für PWA
+    window.addEventListener("load", () => {
+      navigator.serviceWorker?.register("/service-worker.js")
+        .then(() => console.log("Service Worker registered."))
+        .catch((error) => console.error("Error during Service Worker registration: ", error));
+    });
+  </script>
 
-	<!-- Javascript -->
   <script defer src="/main.js"></script>
 </head>
 
@@ -38,16 +47,16 @@
     <div id="timer" class="timer-wrapper">
       <div class="timer-card">
         <p id="timerNoch" class="timer-noch-text">noch</p>
-        
+
         <p class="timer-left-time">
           <span id="timeLeft">0 min</span>
         </p>
-  
+
         <p class="timer-endet-text">
           <span>endet </span>
           <b id="endTime"></b>
         </p>
-        
+
         <div class="progress">
           <div id="progressbar" role="progressbar" aria-label="Fortschritt" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
@@ -82,7 +91,7 @@
           <input id="inputTime" type="time" name="time" required tabindex="2" />
         </div>
       </section>
-      
+
       <footer>
         <!--  Wenn jemand mit Enter die Form submitted, wird dafür der erste Button in der
               Form genutzt, statt (was mehr Sinn ergeben würde) den ersten Button mit type=submit.
