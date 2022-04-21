@@ -28,11 +28,13 @@
   <!-- Javascript -->
   <script>
     // Service Worker registrieren für PWA
-    window.addEventListener("load", () => {
-      navigator.serviceWorker?.register("/service-worker.js")
-        .then(() => console.log("Service Worker registered."))
-        .catch((error) => console.error("Error during Service Worker registration: ", error));
-    });
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("/service-worker.js")
+          .then(() => console.log("Service Worker registered."))
+          .catch((error) => console.error("Error during Service Worker registration: ", error));
+      });
+    }
   </script>
 
   <script defer src="/main.js"></script>
