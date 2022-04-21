@@ -37,6 +37,7 @@
 
   /* danger colors */
   --text-danger-color:        hsl(var(--danger-hue) 50% 45%);
+  --text-timer-blink-color:   hsl(var(--danger-hue) 60% 50%);
 
   /* brand borders */
   --border-radius:        0.375rem;

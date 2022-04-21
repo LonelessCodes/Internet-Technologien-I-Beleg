@@ -139,97 +139,128 @@ dialogAttrObserver.observe(modalElem, {
  * States und State-Management
  */
 
-/** @type {Date|null} */
-let startOfCountdown = null;
-/** @type {Date|null} */
-let endOfCountdown = null;
-let timerTimeout = null;
+const END_DATE_KEY = "endDate";
+const START_DATE_KEY = "startDate";
 
-function timerTick() {
-  clearTimeout(timerTimeout);
-
-  if (!startOfCountdown || !endOfCountdown) {
-    return;
-  }
-
-  const now = new Date();
-
-  let timeDeltaMs = endOfCountdown.getTime() - startOfCountdown.getTime();
-  if (timeDeltaMs < 0) {
-    timeDeltaMs = 0;
-  }
-  let timeLeftMs = endOfCountdown.getTime() - now.getTime();
-  if (timeLeftMs < 0) {
-    timeLeftMs = 0;
-  }
-
-  const percent = (
-    timeDeltaMs > 0
-      ? 1.0 - (timeLeftMs / timeDeltaMs)
-      : 0.0
-  ) * 100;
-
-  const hours = Math.floor(timeLeftMs / 3600_000);
-  const minutes = Math.ceil((timeLeftMs % 3600_000) / 60_000);
+const timer = {
+  /** @type {Date|null} */
+  startOfCountdown: null,
+  /** @type {Date|null} */
+  endOfCountdown:   null,
+  timeout:          null,
   
-  if (hours > 0) {
-    timeLeftElem.innerText = `${hours} h ${pad(minutes, 2)} min`;
-  } else {
-    timeLeftElem.innerText = `${minutes} min`;
-  }
-
-  progressbarElem.style.width = `${percent}%`;
-  progressbarElem.ariaValueNow = Math.floor(percent).toString();
-
-  if (timeLeftMs > 0) {
-    timerTimeout = setTimeout(timerTick, 1000);
-  }
-}
-
-/**
- * Timer Funktionen
- */
-
-function clearTimer() {
-  endOfCountdown = null;
-  startOfCountdown = null;
-  localStorage.clear();
-  clearTimeout(timerTimeout);
-  timerElem.classList.remove("timer-wrapper-show");
-  openModalButton.innerText = "Setze einen Timer";
-}
-
-/**
- * @param {Date} startDate 
- * @param {Date} endDate 
- */
-function setTimer(startDate, endDate) {
-  endOfCountdown = endDate;
-  startOfCountdown = startDate;
-
-  localStorage.setItem(END_DATE_KEY, endDate.toISOString());
-  localStorage.setItem(START_DATE_KEY, startDate.toISOString());
-
-  endTimeElem.innerText = `${dateToHumanTime(endOfCountdown)}`;
-  timerElem.classList.add("timer-wrapper-show");
-  openModalButton.innerText = "Einstellungen";
-  timerTick();
-}
-
-function loadTimer() {
-  startOfCountdown = parseDate(localStorage.getItem(START_DATE_KEY));
-  endOfCountdown = parseDate(localStorage.getItem(END_DATE_KEY));
+  tick() {
+    clearTimeout(this.timeout);
   
-  if (!startOfCountdown || !endOfCountdown) {
-    clearTimer();
-    return;
-  }
+    if (!this.startOfCountdown || !this.endOfCountdown) {
+      return;
+    }
+  
+    const now = new Date();
+  
+    let timeDeltaMs = this.endOfCountdown.getTime() - this.startOfCountdown.getTime();
+    if (timeDeltaMs < 0) {
+      timeDeltaMs = 0;
+    }
+    let timeLeftMs = this.endOfCountdown.getTime() - now.getTime();
+    if (timeLeftMs < 0) {
+      timeLeftMs = 0;
+    }
+  
+    const percentCompletion = (
+      timeDeltaMs > 0
+        ? 1.0 - (timeLeftMs / timeDeltaMs)
+        : 0.0
+    ) * 100;
+  
+    progressbarElem.style.width = `${percentCompletion}%`;
+    progressbarElem.ariaValueNow = Math.floor(percentCompletion).toString();
+  
+    const hours = Math.floor(timeLeftMs / 3600_000);
+    const minutes = Math.ceil((timeLeftMs % 3600_000) / 60_000);
+    
+    if (hours > 0) {
+      timeLeftElem.innerText = `${hours} h ${pad(minutes, 2)} min`;
+    }
+    else if (minutes > 0) {
+      timeLeftElem.innerText = `${minutes} min`;
+    }
+    else {
+      timeLeftElem.innerText = "Zeit abgelaufen";
+      timerNochElem.classList.add("timer-noch-text-hide"); // verstecke das "noch" in "noch 0 h 0 min"
+    }
+  
+    // Blinke den Timer alle viertel Stunde
+    if (minutes % 15 === 0) {
+      timeLeftElem.classList.add("timer-left-time-blink");
+    }
+    // Blinke den Timer auch bei den letzten 10, 5 und der allerletzten Minute
+    else if (hours === 0 && [1, 5, 10].includes(minutes)) {
+      timeLeftElem.classList.add("timer-left-time-blink");
+    }
+    else {
+      timeLeftElem.classList.remove("timer-left-time-blink");
+    }
+    
+    // Wenn der Countdown noch nicht abgelaufen ist, wiederhole das ganze in einer Sekunde
+    if (timeLeftMs > 0) {
+      this.timeout = setTimeout(timerTick, 1000);
+    }
+  },
 
-  endTimeElem.innerText = `${dateToHumanTime(endOfCountdown)}`;
-  timerElem.classList.add("timer-wrapper-show");
-  openModalButton.innerText = "Einstellungen";
-  timerTick();
-}
+  /**
+   * Setze den Countdown zurück und zeige ihn nicht mehr an
+   */
+  clear() {
+    clearTimeout(this.timeout);
+    this.startOfCountdown = null;
+    this.endOfCountdown   = null;
+    localStorage.clear();
+  
+    openModalButton.innerText = "Setze einen Timer";
+    timerElem.classList.remove("timer-wrapper-show");
+  },
+
+  /**
+   * Setze und starte den Countdown
+   * @param {Date} startDate 
+   * @param {Date} endDate 
+   */
+  set(startDate, endDate) {
+    this.startOfCountdown = startDate;
+    this.endOfCountdown   = endDate;
+  
+    localStorage.setItem(END_DATE_KEY, endDate.toISOString());
+    localStorage.setItem(START_DATE_KEY, startDate.toISOString());
+  
+    endTimeElem.innerText = `${dateToHumanTime(this.endOfCountdown)}`;
+    openModalButton.innerText = "Einstellungen";
+    timerElem.classList.add("timer-wrapper-show");
+    timerNochElem.classList.remove("timer-noch-text-hide");
+  
+    this.tick();
+  },
+
+  /**
+   * Lade gespeicherte Daten aus localStorage
+   */
+  load() {
+    this.startOfCountdown = parseDate(localStorage.getItem(START_DATE_KEY));
+    this.endOfCountdown   = parseDate(localStorage.getItem(END_DATE_KEY));
+    
+    if (!this.startOfCountdown || !this.endOfCountdown) {
+      this.clear();
+      return;
+    }
+  
+    endTimeElem.innerText = `${dateToHumanTime(this.endOfCountdown)}`;
+    openModalButton.innerText = "Einstellungen";
+    timerElem.classList.add("timer-wrapper-show");
+    timerNochElem.classList.remove("timer-noch-text-hide");
+  
+    this.tick();
+  }
+};
 
 /*
 Validiere Eingabe in Modal, und disable OK-Button wenn date oder
@@ -276,10 +307,10 @@ modalElem.addEventListener("closing", () => {
     const date = inputDate.value;
     const time = inputTime.value;
 
-    setTimer(new Date(), new Date(`${date} ${time}`));
+    timer.set(new Date(), new Date(`${date} ${time}`));
   }
   else if (modalElem.returnValue === "clear") {
-    clearTimer();
+    timer.clear();
   }
 });
 

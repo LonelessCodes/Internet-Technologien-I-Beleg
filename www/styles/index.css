@@ -69,6 +69,9 @@ main p {
 .timer-noch-text {
   margin-block-end: calc(0.25em + 0.5rem);
 }
+.timer-noch-text-hide {
+  display: none;
+}
 .timer-endet-text {
   /*  durch verbinden von "em" und "rem" skaliert der margin zwar mit der "font-size" mit,
       der Grenzwert geht bei "font-size" -> 0 aber gegen den konstanten Wert "rem" */
@@ -79,7 +82,7 @@ main p {
   color: var(--text-color);
 }
 
-.time-left-time {
+.timer-left-time {
   color: var(--surface-primary-color);
   font-size: clamp(
     2rem, 
@@ -88,9 +91,19 @@ main p {
   );
   font-weight: 900;
 }
-/* .time-left-time-blink {
-
-} */
+.timer-left-time-blink {
+  animation-name: timer-blink;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+}
+@keyframes timer-blink {
+  0%, 20%, 100% {
+    color: var(--text-timer-blink-color);
+  }
+  60% {
+    color: transparent;
+  }
+}
 
 .progress {
   width: calc(100% - 1rem);
