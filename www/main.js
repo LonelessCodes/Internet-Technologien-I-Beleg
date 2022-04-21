@@ -186,7 +186,7 @@ const timer = {
     
     // Wenn der Countdown noch nicht abgelaufen ist, wiederhole das ganze in einer Sekunde
     if (timeLeftMs > 0) {
-      this.timeout = setTimeout(timerTick, 1000);
+      this.timeout = setTimeout(() => timer.tick(), 1000);
     }
   },
 
@@ -305,5 +305,4 @@ setIntervalRunInstantly(() => {
 /**
  * Lade Daten aus 
  */
-
-loadTimer();
+timer.load();
