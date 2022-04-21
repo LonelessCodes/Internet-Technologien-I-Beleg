@@ -9,7 +9,8 @@
   --font-size: 16px;
 
   /* brand foundation */
-  --brand-hue: 171;
+  --brand-hue:  171;
+  --danger-hue: 347;
 
   /* brand colors */
   --white-color:              white;
@@ -35,7 +36,6 @@
   --focus-border-color:       hsl(var(--brand-hue) 66% 50%);
 
   /* danger colors */
-  --danger-hue: 347;
   --text-danger-color:        hsl(var(--danger-hue) 50% 45%);
 
   /* brand borders */
@@ -74,17 +74,15 @@ Der meiste Code dafür kommt von TailwindCSS.
 */
 
 
-/*
-Prevent padding and border from affecting element width. (https://github.com/mozdevs/cssremedy/issues/4)
-*/
-
-
 *,
 ::before,
 ::after {
+  /* Prevent padding and border from affecting element width. (https://github.com/mozdevs/cssremedy/issues/4) */
   box-sizing: border-box;
+  /* Setze border-Properties auf sinnvolle Standardwerte */
   border-width: 0;
   border-style: solid;
+  border-color: var(--border-color);
 }
 
 
@@ -110,22 +108,6 @@ Remove the margin in all browsers.
 
 body {
   margin: 0;
-}
-
-
-/*
-Remove the default font size and weight for headings.
-*/
-
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-size: inherit;
-  font-weight: inherit;
 }
 
 
@@ -219,13 +201,7 @@ Removes the default spacing and border for appropriate elements.
 */
 
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p {
+h1, h2, h3, h4, h5, h6, p {
   margin: 0;
 }
 

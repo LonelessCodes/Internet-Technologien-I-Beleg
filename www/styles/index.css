@@ -136,7 +136,6 @@ main p {
 }
 
 .current-time {
-  /* margin-block: 3rem; */
   font-size: clamp(
     1.8rem, 
     13vw - 0.5rem, 
