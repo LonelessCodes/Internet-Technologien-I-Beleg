@@ -125,26 +125,14 @@ main p {
   }
 }
 
-.noscript {
+noscript {
   position: fixed;
   top: 0;
-  bottom: 0;
-  right: 0;
   left: 0;
-  backdrop-filter: blur(20px);
-  background-color: var(--modal-background-color);
-}
-.noscript > div {
+  right: 0;
+  z-index: 200;
+  padding: 1rem;
+  text-align: center;
+
   background-color: var(--white-color);
-
-  max-inline-size: min(90vw, 60ch);
-  max-block-size: min(88vh, 100%);
-  margin: 6vh auto auto auto;
-  padding: 1rem 1.25rem;
-
-  z-index: 100;
-  overflow: hidden;
-  border-radius: var(--border-radius-xl);
-  
-  box-shadow: var(--shadow-lg);
 }
