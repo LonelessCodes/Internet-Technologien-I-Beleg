@@ -50,7 +50,6 @@
   --shadow-sm: 0 1px  3px  0     rgb(0 0 0 / 0.1), 0 1px  2px  0px  rgb(0 0 0 / 0.06);
   --shadow-md: 0 10px 15px -3px  rgb(0 0 0 / 0.1), 0 4px  6px  -2px rgb(0 0 0 / 0.05);
   --shadow-lg: 0 20px 25px -5px  rgb(0 0 0 / 0.1), 0 10px 10px -5px rgb(0 0 0 / 0.04);
-  --shadow-xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
 
   /* Eine weniger starke Version des --shadow-lg */
   --shadow-lg-faint: 0 20px 25px -5px  rgb(0 0 0 / 0.08), 0 10px 10px -5px rgb(0 0 0 / 0.03);
@@ -63,8 +62,8 @@
   --ease-out:     cubic-bezier(0.33, 1, 0.68, 1);
   --ease-in-out:  cubic-bezier(0.4, 0, 0.2, 1);
 
-  --duration: 200ms;
-  --duration-quick: 100ms;
+  --duration:         200ms;
+  --duration-quick:   100ms;
   --duration-quicker: 50ms;
 }
 
