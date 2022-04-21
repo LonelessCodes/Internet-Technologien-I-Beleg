@@ -83,18 +83,6 @@ function setIntervalRunInstantly(func, timeout) {
   return func(), setInterval(func, timeout);
 }
 
-/**
- * Warte bis alle Animationen auf einem Element/Animatable ihre Promises
- * erfüllt haben.
- * @param {Animatable} element 
- * @returns {Promise<PromiseSettledResult<Animation>[]>}
- */
-function waitForAnimationsToComplete(element) {
-  return Promise.allSettled(
-    element.getAnimations().map(animation => animation.finished)
-  );
-}
-
 /*
  * Dialog Funktionalität
  * 
@@ -105,9 +93,7 @@ function waitForAnimationsToComplete(element) {
  */
 
 const dialogClosingEvent = new Event("closing");
-const dialogClosedEvent = new Event("closed");
 const dialogOpeningEvent = new Event("opening");
-const dialogOpenedEvent = new Event("opened");
 
 // Verfolge das Öffnen des Dialogs / Ändern des open-Attributs
 const dialogAttrObserver = new MutationObserver((mutations) => {
@@ -118,15 +104,11 @@ const dialogAttrObserver = new MutationObserver((mutations) => {
       const isOpen = dialog.hasAttribute("open");
       if (isOpen) {
         dialog.dispatchEvent(dialogOpeningEvent);
-        await waitForAnimationsToComplete(dialog);
-        dialog.dispatchEvent(dialogOpenedEvent);
       } else {
         // Wir lauschen, wann das "open"-Attribut entfernt wird, statt das
         // offizielle "close"-Event, da dieses in Chrome for Android nicht
-        // gefeuert wird. Deswegen machen wir unser eigenes "closing"- und "closed"-Event
+        // gefeuert wird. Deswegen machen wir unser eigenes "closing"-Event
         dialog.dispatchEvent(dialogClosingEvent);
-        await waitForAnimationsToComplete(dialog);
-        dialog.dispatchEvent(dialogClosedEvent);
       }
     }
   })
