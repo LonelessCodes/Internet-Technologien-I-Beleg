@@ -67,6 +67,9 @@ dialog > form {
 dialog > form > * {
   padding: 1rem 1.25rem;
 }
+dialog > form > :is(section, footer) {
+  background-color: var(--white-color);
+}
 
 dialog > form > header > h3 {
   line-height: 1rem;
@@ -93,7 +96,7 @@ dialog > form > section > div {
   justify-items: flex-start;
 }
 dialog > form > section > div > label {
-  margin-bottom: 0.5rem;
+  margin-block-end: 0.5rem;
   padding-inline: 0.6rem;
 }
 
@@ -112,8 +115,4 @@ dialog > form > footer > div {
   flex-direction: row-reverse;
   flex-wrap: wrap;
   gap: 1rem;
-}
-
-dialog > form > :is(section, footer) {
-  background-color: var(--white-color);
 }
