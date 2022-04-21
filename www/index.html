@@ -59,7 +59,7 @@
     </p>
 
     <div class="main-footer">
-      <button id="openModalButton" class="button-primary button-big round focusable shadow">Setze einen Timer</button>
+      <button id="openModalButton" class="button-primary button-big round">Setze einen Timer</button>
     </div>
   </main>
 
@@ -81,11 +81,11 @@
       <section>
         <div>
           <label for="inputDate">End-Datum</label>
-          <input id="inputDate" class="focusable shadow" type="date" name="date" autofocus required tabindex="1" />
+          <input id="inputDate" type="date" name="date" autofocus required tabindex="1" />
         </div>
         <div>
           <label for="inputTime">End-Uhrzeit</label>
-          <input id="inputTime" class="focusable shadow" type="time" name="time" required tabindex="2" />
+          <input id="inputTime" type="time" name="time" required tabindex="2" />
         </div>
       </section>
       
@@ -95,11 +95,11 @@
               Deswegen müssen die Elemente in der falschen Reihenfolge im DOM angelegt,
               und dann mit CSS und tabindex wieder in die richtige Reihenfolge gebracht werden. -->
         <div>
-          <button id="settingsSubmit" class="button-primary focusable shadow" type="submit" value="submit" disabled tabindex="5">OK</button>
-          <button class="focusable shadow" value="cancel" tabindex="4">Abbrechen</button>
+          <button id="settingsSubmit" class="button-primary" type="submit" value="submit" disabled tabindex="5">OK</button>
+          <button value="cancel" tabindex="4">Abbrechen</button>
         </div>
         <div>
-          <button class="button-danger focusable shadow" value="clear" tabindex="3">Clear Timer</button>
+          <button class="button-danger" value="clear" tabindex="3">Clear Timer</button>
         </div>
       </footer>
     </form>

@@ -1,0 +1,126 @@
+/*
+Für viele CSS-Properties gibt es einzeln veränderbare Teile wie
+border-color für border, padding-left für padding usw.
+Bei box-shadow ist es aber nicht möglich einzeln verschiedene Shadows auf
+dem selben Element zu ändern. Deswegen haben wir eine Klasse, die box-shadow
+für den Focus-Ring und den normalen Shadow setzen kann, und dann die Werte der
+Variablen einsetzt, wenn diese auf dem Element gesetzt werden
+*/
+
+/*
+Um einen Focus-Ring um ein Element zu zaubern, wenn
+dieses fokusiert ist
+*/
+button,
+input {
+  box-shadow:
+    var(--ring-shadow, var(--no-shadow)),
+    var(--shadow,      var(--no-shadow));
+}
+button:not(:disabled):focus,
+input:not(:disabled):focus {
+  --ring-shadow: 0 0 0 3px var(--focus-ring-color);
+  border-color: var(--focus-border-color);
+}
+
+/********
+  BUTTON
+*********/
+
+button {
+  /* Set the default cursor for buttons in all browsers */
+  cursor: pointer;
+
+  --shadow: var(--shadow-sm);
+  transform: scale(1);
+
+  border-radius: var(--border-radius);
+
+  padding: 0.5rem 1rem;
+
+  /* Remove the inheritance of text transform in Edge and Firefox. */
+  text-transform: none;
+  font-weight: 500;
+  letter-spacing: 0.025em;
+
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+
+  --trans-duration: var(--duration-quick);
+  transition:
+    box-shadow        var(--trans-duration) var(--ease-in-out),
+    transform         var(--trans-duration) var(--ease-in-out),
+    background-color  var(--trans-duration) var(--ease-in-out);
+}
+button:not(:disabled):hover {
+  --shadow: var(--shadow-md);
+}
+button:not(:disabled):active {
+  transform: scale(0.97);
+  --shadow: var(--no-shadow);
+  --trans-duration: var(--duration-quicker);
+}
+
+button.button-big {
+  font-size: 100%;
+  padding: 0.75rem 1.25rem;
+}
+
+button.round {
+  border-radius: var(--border-radius-round);
+}
+
+button.button-primary {
+  background-color: var(--surface-primary-color);
+  color: var(--white-color);
+}
+button.button-primary:not(:disabled):hover {
+  background-color: var(--surface-primary-color-l);
+}
+button.button-primary:not(:disabled):active {
+  background-color: var(--surface-primary-color-d);
+}
+
+button.button-danger {
+  color: var(--text-danger-color);
+}
+
+button:disabled {
+  background-color: var(--surface-disabled-color);
+  --shadow: var(--no-shadow);
+}
+
+/*******
+  INPUT
+********/
+
+input {
+  --shadow: var(--no-shadow-inset);
+
+  width: 100%;
+  background-color: var(--white-color);
+  border-radius: var(--border-radius);
+  border-width: 1px;
+  border-color: var(--border-color);
+  padding: 0.25rem 0.5rem;
+  color: var(--text-color);
+  cursor: text;
+
+  --trans-duration: var(--duration-quick);
+  transition:
+    box-shadow   var(--trans-duration) var(--ease-in-out),
+    border-color var(--trans-duration) var(--ease-in-out);
+}
+input:not(:disabled):hover {
+  border-color: var(--border-color-darker);
+}
+input:not(:disabled):focus {
+  --shadow: var(--shadow-inset);
+  --trans-duration: var(--duration-quicker);
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+input:is([type="date"], [type="time"])::-webkit-calendar-picker-indicator {
+  opacity: 0.75;
+}

@@ -141,16 +141,6 @@ input {
 
 
 /*
-Remove the inheritance of text transform in Edge and Firefox.
-*/
-
-
-button {
-  text-transform: none;
-}
-
-
-/*
 1. Correct the inability to style clickable types in iOS and Safari.
 2. Remove default button styles.
 */
@@ -203,17 +193,6 @@ Removes the default spacing and border for appropriate elements.
 
 h1, h2, h3, h4, h5, h6, p {
   margin: 0;
-}
-
-
-/*
-Set the default cursor for buttons.
-*/
-
-
-button,
-[role="button"] {
-  cursor: pointer;
 }
 
 
