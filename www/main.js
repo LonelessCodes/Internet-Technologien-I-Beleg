@@ -1,13 +1,15 @@
 /** @type {HTMLDivElement} */
 const timerElem = document.getElementById("timer");
-/** @type {HTMLDivElement} */
-const currentTimeElem = document.getElementById("currentTime");
-/** @type {HTMLDivElement} */
-const progressbarElem = document.getElementById("progressbar");
 /** @type {HTMLSpanElement} */
 const endTimeElem = document.getElementById("endTime");
 /** @type {HTMLSpanElement} */
 const timeLeftElem = document.getElementById("timeLeft");
+/** @type {HTMLParagraphElement} */
+const timerNochElem = document.getElementById("timerNoch");
+/** @type {HTMLDivElement} */
+const progressbarElem = document.getElementById("progressbar");
+/** @type {HTMLDivElement} */
+const currentTimeElem = document.getElementById("currentTime");
 
 /** @type {HTMLButtonElement} */
 const openModalButton = document.getElementById("openModalButton");
@@ -21,13 +23,6 @@ const modalElem = document.getElementById("modal");
 const inputDate = document.getElementById("inputDate");
 /** @type {HTMLInputElement} */
 const inputTime = document.getElementById("inputTime");
-
-const END_DATE_KEY = "endDate";
-const START_DATE_KEY = "startDate";
-
-/**
- * Utility Funktionen
- */
 
 /**
  * Füge führende Nullen zu einem Wert hinzu
@@ -214,7 +209,7 @@ const timer = {
   
     localStorage.setItem(END_DATE_KEY, endDate.toISOString());
     localStorage.setItem(START_DATE_KEY, startDate.toISOString());
-  
+
     endTimeElem.innerText = `${dateToHumanTime(this.endOfCountdown)}`;
     openModalButton.innerText = "Einstellungen";
     timerElem.classList.add("timer-wrapper-show");
@@ -224,23 +219,17 @@ const timer = {
   },
 
   /**
-   * Lade gespeicherte Daten aus localStorage
+   * Lade gespeicherte Daten aus localStorage und starte den Countdown
    */
   load() {
-    this.startOfCountdown = parseDate(localStorage.getItem(START_DATE_KEY));
-    this.endOfCountdown   = parseDate(localStorage.getItem(END_DATE_KEY));
+    const startDate = parseDate(localStorage.getItem(START_DATE_KEY));
+    const endDate   = parseDate(localStorage.getItem(END_DATE_KEY));
     
-    if (!this.startOfCountdown || !this.endOfCountdown) {
-      this.clear();
-      return;
+    if (!startDate || !endDate) {
+      return this.clear();
     }
-  
-    endTimeElem.innerText = `${dateToHumanTime(this.endOfCountdown)}`;
-    openModalButton.innerText = "Einstellungen";
-    timerElem.classList.add("timer-wrapper-show");
-    timerNochElem.classList.remove("timer-noch-text-hide");
-  
-    this.tick();
+
+    this.set(startDate, endDate);
   }
 };
 
@@ -296,6 +285,9 @@ modalElem.addEventListener("closing", () => {
   }
 });
 
+/**
+ * Aktuelle Zeit anzeigen
+ */
 setIntervalRunInstantly(() => {
   const now = new Date();
 
@@ -303,6 +295,6 @@ setIntervalRunInstantly(() => {
 }, 1000);
 
 /**
- * Lade Daten aus 
+ * Lade Daten aus localStorage falls verfügbar
  */
 timer.load();
