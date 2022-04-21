@@ -38,25 +38,121 @@ dieses fokusiert ist
   border-color: var(--focus-border-color);
 }
 
-/* here was button */
-
 main {
-  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  gap: 1rem;
+
+  width: 100vw;
   max-width: 1000px;
-  height: 100vh;
+  min-height: 100vh;
   margin: 0 auto;
-  padding: 1rem 1.5rem;
-  position: relative;
 }
-.main-content {
+main::after {
+  display: block;
+  content: "🏳️‍⚧️";
+  position: fixed;
+  bottom: 1rem;
+  left: 1rem;
+  font-size: 2rem;
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+main > * {
+  padding-inline: min(4vw, 1.5rem);
+}
+
+.timer-wrapper,
+.current-time {
   text-align: center;
 }
-
 .timer-wrapper {
   display: none;
 }
 .timer-wrapper-show {
-  display: initial;
+  display: block;
+}
+
+.timer-card {
+  box-shadow: var(--shadow-lg-faint);
+  background-image: linear-gradient(180deg, var(--surface-light-gray-color), transparent);
+  border-radius: var(--border-radius-xxl);
+  padding: 1.5rem;
+}
+
+main p {
+  line-height: 1em;
+}
+
+.timer-noch-text,
+.timer-endet-text {
+  color: var(--text-lighter-color);
+  font-size: clamp(
+    1rem, 
+    7vw, 
+    3.25rem
+  );
+}
+.timer-noch-text {
+  margin-block-end: calc(0.25em + 0.5rem);
+}
+.timer-endet-text {
+  /*  durch verbinden von "em" und "rem" skaliert der margin zwar mit der "font-size" mit,
+      der Grenzwert geht bei "font-size" -> 0 aber gegen den konstanten Wert "rem" */
+  margin-block-start: calc(0.3em + 0.5rem);
+  margin-block-end:   calc(0.7em + 0.5rem);
+}
+.timer-endet-text > b {
+  color: var(--text-color);
+}
+
+.time-left-time {
+  color: var(--surface-primary-color);
+  font-size: clamp(
+    2rem, 
+    15vw - 0.5rem, /* relativer/flexibler Wert + konstanter Wert = Grenzwert konstanter Wert */
+    8.5rem
+  );
+  font-weight: 900;
+}
+/* .time-left-time-blink {
+
+} */
+
+.progress {
+  width: calc(100% - 1rem);
+  margin-inline: 0.5rem;
+  height: 0.5rem;
+  border-radius: var(--border-radius);
+  background-color: var(--surface-gray-color);
+  overflow: hidden;
+}
+.progress > div {
+  height: 100%;
+  background-color: var(--surface-primary-color);
+  transition: width var(--duration) var(--ease-in-out);
+}
+
+.current-time {
+  /* margin-block: 3rem; */
+  font-size: clamp(
+    1.8rem, 
+    13vw - 0.5rem, 
+    7.5rem
+  );
+}
+
+.main-footer {
+  text-align: right;
+  /* Gib dem Layout mehr Platz nach unten */
+  padding-block-end: 2rem;
+}
+@media screen and (max-width: 768px) {
+  .main-footer {
+    text-align: center;
+  }
 }
 
 .noscript {

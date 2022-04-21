@@ -1,7 +1,3 @@
-/*
-Variablen
-*/
-
 /* Weil ::backdrop Kind keines Elements ist,
    können die Variablen nicht von :root gefetched werden, sondern müssen
    direkt am Element definiert werden.
@@ -12,27 +8,6 @@ Variablen
   --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, Noto Sans, "Helvetica Neue", sans-serif;
   --font-size: 16px;
 
-  /* CSS HEX */
-  --orange-soda: hsl(10, 85%, 61%);
-  --isabelline: hsl(18, 22%, 91%);
-  --gainsboro: hsl(60, 1%, 85%);
-  --black-olive: hsl(72, 10%, 20%);
-  --vivid-sky-blue: hsl(197, 78%, 64%);
-
-  /* CSS HEX */
-  --paradise-pink: hsl(347, 83%, 60%);
-  --russian-violet: hsl(252, 51%, 24%);
-  --rich-black-fogra-39: hsl(156, 20%, 5%);
-  --silver-sand: hsl(171, 6%, 78%);
-  --tiffany-blue: hsl(175, 51%, 48%);
-
-  /* CSS HEX */
-  --onyx: hsl(203, 7%, 24%);
-  --timberwolf: hsl(38, 8%, 81%);
-  --platinum: hsl(45, 14%, 89%);
-  --keppel: hsl(168, 47%, 50%);
-  --maize-crayola: hsl(44, 78%, 58%);
-
   /* brand foundation */
   --brand-hue: 171;
 
@@ -41,6 +16,7 @@ Variablen
 
   --text-color:               hsl(var(--brand-hue) 20% 20%);
   --text-light-color:         hsl(var(--brand-hue) 10% 35%);
+  --text-lighter-color:       hsl(var(--brand-hue) 5%  50%);
 
   --surface-primary-color:    hsl(var(--brand-hue) 80% 44%);
   --surface-primary-color-l:  hsl(var(--brand-hue) 70% 55%);
@@ -58,9 +34,14 @@ Variablen
   --focus-ring-color:         hsl(var(--brand-hue) 84% 78% / 0.8);
   --focus-border-color:       hsl(var(--brand-hue) 66% 50%);
 
+  /* danger colors */
+  --danger-hue: 347;
+  --text-danger-color:        hsl(var(--danger-hue) 50% 45%);
+
   /* brand borders */
   --border-radius:        0.375rem;
   --border-radius-xl:     1rem;
+  --border-radius-xxl:    1.5rem;
   --border-radius-round:  100vmax;
 
   /* brand shadows  */
@@ -69,8 +50,11 @@ Variablen
   --shadow-md: 0 10px 15px -3px  rgb(0 0 0 / 0.1), 0 4px  6px  -2px rgb(0 0 0 / 0.05);
   --shadow-lg: 0 20px 25px -5px  rgb(0 0 0 / 0.1), 0 10px 10px -5px rgb(0 0 0 / 0.04);
   --shadow-xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
-  
-  --no-shadow-inset: inset 0 0 rgb(0 0 0 / 0);
+
+  /* Eine weniger starke Version des --shadow-lg */
+  --shadow-lg-faint: 0 20px 25px -5px  rgb(0 0 0 / 0.08), 0 10px 10px -5px rgb(0 0 0 / 0.03);
+
+  --no-shadow-inset: inset var(--no-shadow);
   --shadow-inset:    inset 0 1px 3px 0 rgb(0 0 0 / 0.1), inset 0 1px 2px 0px rgb(0 0 0 / 0.06);
 
   /* brand transitions - cubic in and out */

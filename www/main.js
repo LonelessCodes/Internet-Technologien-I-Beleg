@@ -196,6 +196,7 @@ function clearTimer() {
   localStorage.clear();
   clearTimeout(timerTimeout);
   timerElem.classList.remove("timer-wrapper-show");
+  openModalButton.innerText = "Setze einen Timer";
 }
 
 /**
@@ -211,6 +212,7 @@ function setTimer(startDate, endDate) {
 
   endTimeElem.innerText = `${dateToHumanTime(endOfCountdown)}`;
   timerElem.classList.add("timer-wrapper-show");
+  openModalButton.innerText = "Einstellungen";
   timerTick();
 }
 
@@ -225,6 +227,7 @@ function loadTimer() {
 
   endTimeElem.innerText = `${dateToHumanTime(endOfCountdown)}`;
   timerElem.classList.add("timer-wrapper-show");
+  openModalButton.innerText = "Einstellungen";
   timerTick();
 }
 

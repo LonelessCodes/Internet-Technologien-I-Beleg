@@ -31,32 +31,36 @@
 
 <body>
   <main>
-    <div class="main-content">
-      <div id="timer" class="timer-wrapper">
-        <div class="time-left-label">
+    <div id="timer" class="timer-wrapper">
+      <div class="timer-card">
+        <p class="timer-noch-text">
           noch
-        </div>
-
-        <div class="time-left-time">
+        </p>
+        
+        <p class="time-left-time">
           <span id="timeLeft">0 min</span>
-        </div>
+        </p>
   
-        <div class="end-time">
+        <p class="timer-endet-text">
           <span>endet </span>
-          <span id="endTime" class="end-time-time"></span>
-        </div>
-  
+          <b id="endTime"></b>
+        </p>
+        
         <div class="progress">
-          <div id="progressbar" class="progress-bar" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" aria-roledescription="Fortschritt"></div>
+          <div id="progressbar" role="progressbar" aria-label="Fortschritt" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
-      </div>
-
-      <div class="current-time" aria-roledescription="Aktuelle Zeit">
-        <span id="currentTime">00:00:00</span>
       </div>
     </div>
 
-    <button id="openModalButton" class="button-primary round focusable shadow">Einstellungen</button>
+    <p class="current-time" aria-roledescription="Aktuelle Zeit">
+      <b id="currentTime">
+        00:00:00
+      </b>
+    </p>
+
+    <div class="main-footer">
+      <button id="openModalButton" class="button-primary button-big round focusable shadow">Setze einen Timer</button>
+    </div>
   </main>
 
   <noscript>
@@ -92,10 +96,10 @@
               und dann mit CSS und tabindex wieder in die richtige Reihenfolge gebracht werden. -->
         <div>
           <button id="settingsSubmit" class="button-primary focusable shadow" type="submit" value="submit" disabled tabindex="5">OK</button>
-          <button class="button-secondary focusable shadow" value="cancel" tabindex="4">Abbrechen</button>
+          <button class="focusable shadow" value="cancel" tabindex="4">Abbrechen</button>
         </div>
         <div>
-          <button class="button-secondary focusable shadow" value="clear" tabindex="3">Clear Timer</button>
+          <button class="button-danger focusable shadow" value="clear" tabindex="3">Clear Timer</button>
         </div>
       </footer>
     </form>

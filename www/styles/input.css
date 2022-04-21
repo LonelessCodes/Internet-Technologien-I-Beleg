@@ -2,6 +2,7 @@ input {
   --shadow: var(--no-shadow-inset);
 
   width: 100%;
+  background-color: var(--white-color);
   border-radius: var(--border-radius);
   border-width: 1px;
   border-color: var(--border-color);

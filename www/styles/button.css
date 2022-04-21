@@ -4,7 +4,6 @@ button {
 
   border-radius: var(--border-radius);
 
-  padding: 0.5rem 0.75rem;
   padding: 0.5rem 1rem;
 
   font-weight: 500;
@@ -28,6 +27,15 @@ button:not(:disabled):active {
   --trans-duration: var(--duration-quicker);
 }
 
+button.button-big {
+  font-size: 100%;
+  padding: 0.75rem 1.25rem;
+}
+
+button.round {
+  border-radius: var(--border-radius-round);
+}
+
 button.button-primary {
   background-color: var(--surface-primary-color);
   color: var(--white-color);
@@ -39,11 +47,11 @@ button.button-primary:not(:disabled):active {
   background-color: var(--surface-primary-color-d);
 }
 
+button.button-danger {
+  color: var(--text-danger-color);
+}
+
 button:disabled {
   background-color: var(--surface-disabled-color);
   --shadow: var(--no-shadow);
-}
-
-button.round {
-  border-radius: var(--border-radius-round);
 }
