@@ -23,7 +23,7 @@ input:not(:disabled):focus {
   border-color: var(--focus-border-color);
 }
 
-/********
+/*********
   BUTTON
 *********/
 
@@ -90,7 +90,17 @@ button:disabled {
   --shadow: var(--no-shadow);
 }
 
-/*******
+/***************
+  BUTTON GROUP
+***************/
+
+.button-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+/********
   INPUT
 ********/
 
@@ -123,4 +133,18 @@ input:not(:disabled):focus {
 
 input:is([type="date"], [type="time"])::-webkit-calendar-picker-indicator {
   opacity: 0.75;
+}
+
+/**************
+  INPUT GROUP
+**************/
+
+.input-group {
+  width: 100%;
+  display: grid;
+  justify-items: flex-start;
+}
+.input-group > label {
+  margin-block-end: 0.5em;
+  padding-inline: 0.6em;
 }

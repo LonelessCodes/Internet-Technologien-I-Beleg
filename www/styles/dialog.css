@@ -34,15 +34,20 @@ dialog {
   
   box-shadow: var(--shadow-lg);
 
+  /* für eine schöne slide-in/out-Animation den Dialog im geschlossenen Zustand nach unten verschieben */
   transform: translate(0, 100px);
   /* ease-in für Dialog schließen */
-  transition: transform var(--duration) var(--ease-in), opacity var(--duration) linear;
+  transition:
+    transform var(--duration) var(--ease-in),
+    opacity   var(--duration) linear;
 }
 
 dialog[open] {
   transform: translate(0, 0);
   /* ease-out für Dialog öffnen */
-  transition: transform var(--duration) var(--ease-out), opacity var(--duration) linear;
+  transition:
+    transform var(--duration) var(--ease-out),
+    opacity   var(--duration) linear;
 }
 
 dialog:not([open]) {
@@ -90,15 +95,6 @@ dialog > form > section {
   justify-items: flex-start;
   gap: 1rem;
 }
-dialog > form > section > div {
-  width: 100%;
-  display: grid;
-  justify-items: flex-start;
-}
-dialog > form > section > div > label {
-  margin-block-end: 0.5rem;
-  padding-inline: 0.6rem;
-}
 
 dialog > form > footer {
   display: flex;
@@ -109,10 +105,7 @@ dialog > form > footer {
   align-items: flex-start;
   gap: 1rem;
 }
-dialog > form > footer > div {
-  display: flex;
+dialog > form > footer > .button-group {
   /* siehe Kommentar in HTML */
   flex-direction: row-reverse;
-  flex-wrap: wrap;
-  gap: 1rem;
 }

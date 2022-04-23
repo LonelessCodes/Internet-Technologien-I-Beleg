@@ -84,11 +84,11 @@
       </header>
 
       <section>
-        <div>
+        <div class="input-group">
           <label for="inputDate">End-Datum</label>
           <input id="inputDate" type="date" name="date" autofocus required tabindex="1" />
         </div>
-        <div>
+        <div class="input-group">
           <label for="inputTime">End-Uhrzeit</label>
           <input id="inputTime" type="time" name="time" required tabindex="2" />
         </div>
@@ -99,11 +99,11 @@
               Form genutzt, statt (was mehr Sinn ergeben würde) den ersten Button mit type=submit.
               Deswegen müssen die Elemente in der falschen Reihenfolge im DOM angelegt,
               und dann mit CSS und tabindex wieder in die richtige Reihenfolge gebracht werden. -->
-        <div>
+        <div class="button-group">
           <button id="settingsSubmit" class="button-primary" type="submit" value="submit" disabled tabindex="5">OK</button>
           <button value="cancel" tabindex="4">Abbrechen</button>
         </div>
-        <div>
+        <div class="button-group">
           <button class="button-danger" value="clear" tabindex="3">Clear Timer</button>
         </div>
       </footer>
