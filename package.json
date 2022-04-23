@@ -1,0 +1,16 @@
+{
+  "name": "internet-technologien-i-beleg",
+  "version": "1.0.0",
+  "description": "Eine PWA, die zu einer bestimmten Uhrzeit an einem bestimmten Datum herunter zählt. Sie ist offline verfügbar und speichert die Einstellungen lokal.",
+  "scripts": {
+    "lint": "eslint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@iversion.informatik.htw-dresden.de:s82849/internet-technologien-i-beleg.git"
+  },
+  "author": "",
+  "devDependencies": {
+    "eslint": "^8.14.0"
+  }
+}
