@@ -68,17 +68,6 @@ function dateToHumanDate(date) {
 }
 
 /**
- * Setze einen Interval-Timer und führe die gegebene Funktion
- * auch sofort aus
- * @param {TimerHandler} func 
- * @param {number} timeout 
- * @returns {number}
- */
-function setIntervalRunInstantly(func, timeout) {
-  return func(), setInterval(func, timeout);
-}
-
-/**
  * Zeige eine Push-Benachrichtigung
  * @param {string} body 
  * @returns {Promise<Notification | undefined>}
@@ -146,150 +135,165 @@ dialogAttrObserver.observe(dialogElem, {
   attributes: true,
 });
 
+/********************
+ * State Management
+ ********************/
+
+/** @type {Date|null} */
+let startOfCountdown = null;
+/** @type {Date|null} */
+let endOfCountdown = null;
+
 /**
- * States und State-Management
+ * Setze Countdown-Start und -Ende in LocalStorage und in Memory
+ * @param {Date|null} startDate 
+ * @param {Date|null} endDate 
  */
+function setState(startDate, endDate) {
+  localStorage.setItem("startOfCountdown", (startOfCountdown = startDate).toISOString());
+  localStorage.setItem("endOfCountdown", (endOfCountdown = endDate).toISOString());
+}
 
-const END_DATE_KEY = "endDate";
-const START_DATE_KEY = "startDate";
+/**
+ * Bestücke die Variablen mit dem State aus LocalStorage 
+ */
+function loadState() {
+  startOfCountdown = parseDate(localStorage.getItem("startOfCountdown"));
+  endOfCountdown   = parseDate(localStorage.getItem("endOfCountdown"));
+}
 
-const timer = {
-  /** @type {Date|null} */
-  startOfCountdown: null,
-  /** @type {Date|null} */
-  endOfCountdown:   null,
+/**
+ * Lösche den State / Setze den Countdown zurück
+ */
+function resetState() {
+  startOfCountdown = null;
+  endOfCountdown   = null;
+  localStorage.clear();
+}
 
-  /** 
-   * Die Stunden- und Minutenwerte des letzten Ticks, um zu verhindern, dass jede
-   * Sekunde eine Push-Notification abgeschickt wird. Standardmäßig auf Unendlich 
-   * gesetzt, damit sie in jedem Fall immer ein Update triggern, egal wie weit die
-   * Endzeit in der Zukunft liegt.
-   * 
-   * TODO: könnte man auch in localStorage speichern, um den State noch stärker
-   *       zwischen Reloads beizubehalten.
-   */
-  lastTickAt: {
-    hours: Number.POSITIVE_INFINITY,
-    minutes: Number.POSITIVE_INFINITY
-  },
-  timeout:    null,
-  
-  tick() {
-    // stoppe einen existierenden Timeout, um mehr als einem Timeout
-    // auf timer.tick() zugleich vorzubeugen
-    clearTimeout(this.timeout);
-  
-    if (!this.startOfCountdown || !this.endOfCountdown) {
-      return;
-    }
-  
-    let timeDeltaMs = this.endOfCountdown.getTime() - this.startOfCountdown.getTime();
-    if (timeDeltaMs < 0) {
-      timeDeltaMs = 0;
-    }
-    let timeLeftMs = this.endOfCountdown.getTime() - Date.now();
-    if (timeLeftMs < 0) {
-      timeLeftMs = 0;
-    }
-  
-    const percentCompletion = timeDeltaMs > 0
-      ? (1.0 - (timeLeftMs / timeDeltaMs)) * 100
-      : 0.0;
-    progressbarElem.style.width = `${percentCompletion}%`;
-    progressbarElem.ariaValueNow = Math.floor(percentCompletion).toString();
+/**************
+ * Timer Zeug
+ **************/
 
-    if (timeLeftMs > 0) {
-      const hours = Math.floor(timeLeftMs / 3600_000);
-      const minutes = Math.ceil((timeLeftMs % 3600_000) / 60_000);
+let timerTimeout = null;
+/** 
+ * Die Stunden- und Minutenwerte des letzten Ticks, um zu verhindern, dass jede
+ * Sekunde eine Push-Notification abgeschickt wird.
+ */
+let lastTickHours = Number.POSITIVE_INFINITY;
+let lastTickMinutes = Number.POSITIVE_INFINITY;
 
-      if (hours !== this.lastTickAt.hours || minutes !== this.lastTickAt.minutes) {
-        this.lastTickAt.hours = hours;
-        this.lastTickAt.minutes = minutes;
-  
-        const timeLeftStr = hours > 0
-          ? `${hours} h ${pad(minutes, 2)} min`
-          : `${minutes} min`;
-  
-        timeLeftElem.innerText = timeLeftStr;
+function tickTimer() {
+  // stoppe einen existierenden Timeout, um mehr als einem Timeout
+  // auf tickTimer() zugleich vorzubeugen
+  clearTimeout(timerTimeout);
 
-        // Blinke den Timer alle viertel Stunde und auch bei den letzten 10, 5 und der allerletzten Minute
-        //                         |                                         |
-        //            |------------|                     |-------------------|
-        //            v                                  v
-        if (minutes % 15 === 0 || (hours === 0 && [1, 5, 10].includes(minutes))) {
-          timeLeftElem.classList.add("timer-left-time-blink");
-          showNotification(`Nur noch ${timeLeftStr}!`);
-        } else {
-          timeLeftElem.classList.remove("timer-left-time-blink");
-        }
-      }
-      
-      // Wenn der Countdown noch nicht abgelaufen ist, wiederhole das ganze in einer Sekunde
-      this.timeout = setTimeout(() => timer.tick(), 1000);
-    } else {
-      timeLeftElem.innerText = "Zeit abgelaufen";
-      timerNochElem.classList.add("timer-noch-text-hide"); // verstecke das "noch" in "noch 0 h 0 min"
-      timeLeftElem.classList.add("timer-left-time-blink");
-
-      showNotification("Zeit abgelaufen!!!");
-    }
-  },
-
-  /**
-   * Setze den Countdown zurück und zeige ihn nicht mehr an
-   */
-  clear() {
-    clearTimeout(this.timeout);
-    this.startOfCountdown = null;
-    this.endOfCountdown   = null;
-    this.lastTickAt.hours = Number.POSITIVE_INFINITY;
-    this.lastTickAt.minutes = Number.POSITIVE_INFINITY;
-    localStorage.clear();
-  
-    openDialogButton.innerText = "Setze einen Timer";
-    timerElem.classList.remove("timer-wrapper-show");
-  },
-
-  /**
-   * Setze und starte den Countdown
-   * @param {Date} startDate 
-   * @param {Date} endDate 
-   */
-  set(startDate, endDate) {
-    this.startOfCountdown = startDate;
-    this.endOfCountdown   = endDate;
-  
-    localStorage.setItem(END_DATE_KEY, endDate.toISOString());
-    localStorage.setItem(START_DATE_KEY, startDate.toISOString());
-
-    endTimeElem.innerText = `${dateToHumanTime(this.endOfCountdown)}`;
-    openDialogButton.innerText = "Einstellungen";
-    timerElem.classList.add("timer-wrapper-show");
-    timerNochElem.classList.remove("timer-noch-text-hide");
-  
-    this.tick();
-  },
-
-  /**
-   * Lade gespeicherte Daten aus localStorage und starte den Countdown
-   */
-  load() {
-    const startDate = parseDate(localStorage.getItem(START_DATE_KEY));
-    const endDate   = parseDate(localStorage.getItem(END_DATE_KEY));
-    
-    if (!startDate || !endDate) {
-      return this.clear();
-    }
-
-    this.set(startDate, endDate);
+  if (!startOfCountdown || !endOfCountdown) {
+    return;
   }
-};
 
-/*
-Validiere Eingabe in Dialog, und disable OK-Button wenn date oder
-time nicht gesetzt sit
-*/
+  let timeDeltaMs = endOfCountdown.getTime() - startOfCountdown.getTime();
+  if (timeDeltaMs < 0) {
+    timeDeltaMs = 0;
+  }
+  let timeLeftMs = endOfCountdown.getTime() - Date.now();
+  if (timeLeftMs < 0) {
+    timeLeftMs = 0;
+  }
 
+  const percentCompletion = timeDeltaMs > 0
+    ? (1.0 - (timeLeftMs / timeDeltaMs)) * 100
+    : 0.0;
+  progressbarElem.style.width = `${percentCompletion}%`;
+  progressbarElem.ariaValueNow = Math.floor(percentCompletion).toString();
+
+  if (timeLeftMs > 0) {
+    const hours = Math.floor(timeLeftMs / 3600_000);
+    const minutes = Math.ceil((timeLeftMs % 3600_000) / 60_000);
+
+    // Nur wenn ein Update notwendig ist sollte der Countdown geändert werden, damit
+    // die Push-Notification nicht jede Sekunde geschickt wird.
+    if (hours !== lastTickHours || minutes !== lastTickMinutes) {
+      lastTickHours = hours;
+      lastTickMinutes = minutes;
+
+      const timeLeftStr = hours > 0
+        ? `${hours} h ${pad(minutes, 2)} min`
+        : `${minutes} min`;
+
+      timeLeftElem.innerText = timeLeftStr;
+
+      // Blinke den Timer alle viertel Stunde und auch bei den letzten 10, 5 und der allerletzten Minute
+      //                         |                                         |
+      //            |------------|                     |-------------------|
+      //            v                                  v
+      if (minutes % 15 === 0 || (hours === 0 && [1, 5, 10].includes(minutes))) {
+        timeLeftElem.classList.add("timer-left-time-blink");
+        showNotification(`Nur noch ${timeLeftStr}!`);
+      } else {
+        timeLeftElem.classList.remove("timer-left-time-blink");
+      }
+    }
+
+    // Wenn der Countdown noch nicht abgelaufen ist, wiederhole das ganze in einer Sekunde
+    timerTimeout = setTimeout(tickTimer, 1000);
+  } else {
+    // timeLeftMs === 0 => Zeit ist abgelaufen
+    timeLeftElem.innerText = "Zeit abgelaufen";
+    timerNochElem.classList.add("timer-noch-text-hide"); // verstecke das "noch" in "noch 0 h 0 min"
+    timeLeftElem.classList.add("timer-left-time-blink");
+
+    showNotification("Zeit abgelaufen!!!");
+  }
+}
+
+/**
+ * Setze den Countdown zurück und zeige ihn nicht mehr an
+ */
+function clearTimer() {
+  resetState();
+
+  clearTimeout(timerTimeout);
+  lastTickHours = Number.POSITIVE_INFINITY;
+  lastTickMinutes = Number.POSITIVE_INFINITY;
+
+  openDialogButton.innerText = "Setze einen Timer";
+  timerElem.classList.remove("timer-wrapper-show");
+}
+
+/**
+ * Setze und starte den Countdown
+ * @param {Date} startDate 
+ * @param {Date} endDate 
+ */
+function setTimer(startDate, endDate) {
+  setState(startDate, endDate);
+
+  endTimeElem.innerText = `${dateToHumanTime(endOfCountdown)}`;
+  openDialogButton.innerText = "Einstellungen";
+  timerElem.classList.add("timer-wrapper-show");
+  timerNochElem.classList.remove("timer-noch-text-hide");
+
+  tickTimer();
+}
+
+/**
+ * Lade gespeicherte Daten aus LocalStorage und starte den Countdown
+ */
+function loadTimer() {
+  loadState();
+  
+  if (!startOfCountdown || !endOfCountdown) {
+    return clearTimer();
+  }
+
+  setTimer(startOfCountdown, endOfCountdown);
+}
+
+/**
+ * Validiere Eingabe in Dialog, und disable OK-Button wenn date oder
+ * time nicht gesetzt sind
+ */
 function validateInput() {
   const date = inputDate.value;
   const time = inputTime.value;
@@ -300,13 +304,10 @@ function validateInput() {
     settingsSubmitButton.disabled = true;
   }
 }
-
 inputDate.addEventListener("change", validateInput);
 inputTime.addEventListener("change", validateInput);
 
-openDialogButton.addEventListener("click", () => {
-  dialogElem.showModal();
-});
+openDialogButton.addEventListener("click", () => dialogElem.showModal());
 
 dialogElem.addEventListener("opening", () => {
   /*
@@ -330,23 +331,25 @@ dialogElem.addEventListener("closing", () => {
     const date = inputDate.value;
     const time = inputTime.value;
 
-    timer.set(new Date(), new Date(`${date} ${time}`));
+    setTimer(new Date(), new Date(`${date} ${time}`));
   }
   else if (dialogElem.returnValue === "clear") {
-    timer.clear();
+    clearTimer();
   }
 });
 
 /**
  * Aktuelle Zeit anzeigen
  */
-setIntervalRunInstantly(() => {
+function currentTimeTick() {
   const now = new Date();
 
   currentTimeElem.innerText = dateToHumanTime(now, true);
-}, 1000);
+}
+setInterval(currentTimeTick, 1000);
+currentTimeTick();
 
 /**
  * Lade Daten aus localStorage falls verfügbar
  */
-timer.load();
+loadTimer();
