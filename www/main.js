@@ -78,6 +78,40 @@ function setIntervalRunInstantly(func, timeout) {
   return func(), setInterval(func, timeout);
 }
 
+/**
+ * Zeige eine Push-Benachrichtigung
+ * @param {string} body 
+ * @returns {Promise<Notification | undefined>}
+ */
+async function showNotification(body) {
+  // wenn Notifications nicht unterstützt werden (kein Support oder kein HTTPS), returne direkt
+  if (!("Notification" in window)) {
+    return;
+  }
+
+  if (Notification.permission === "denied") {
+    return;
+  }
+
+  // Wenn noch keine Entscheidung getroffen wurde, frage nach Berechtigung und gehe nur weiter
+  // wenn diese positiv ausfällt
+  if (Notification.permission === "default") {
+    const permission = await Notification.requestPermission();
+    if (permission !== "granted") {
+      return;
+    }
+  }
+
+  return new Notification("Countdown", {
+    icon: "/icons/android-chrome-512x512.png",
+    // Erlaube das Ersetzen einer alten Nachricht, da sie ja nicht mehr aktuell ist.
+    // https://developer.mozilla.org/en-US/docs/Web/API/Notifications_API/Using_the_Notifications_API#replacing_existing_notifications
+    tag: "timer-notification",
+    renotify: true,
+    body: body,
+  });
+}
+
 /*
  * Dialog Funktionalität
  * 
@@ -124,64 +158,80 @@ const timer = {
   startOfCountdown: null,
   /** @type {Date|null} */
   endOfCountdown:   null,
-  timeout:          null,
+
+  /** 
+   * Die Stunden- und Minutenwerte des letzten Ticks, um zu verhindern, dass jede
+   * Sekunde eine Push-Notification abgeschickt wird. Standardmäßig auf Unendlich 
+   * gesetzt, damit sie in jedem Fall immer ein Update triggern, egal wie weit die
+   * Endzeit in der Zukunft liegt.
+   * 
+   * TODO: könnte man auch in localStorage speichern, um den State noch stärker
+   *       zwischen Reloads beizubehalten.
+   */
+  lastTickAt: {
+    hours: Number.POSITIVE_INFINITY,
+    minutes: Number.POSITIVE_INFINITY
+  },
+  timeout:    null,
   
   tick() {
+    // stoppe einen existierenden Timeout, um mehr als einem Timeout
+    // auf timer.tick() zugleich vorzubeugen
     clearTimeout(this.timeout);
   
     if (!this.startOfCountdown || !this.endOfCountdown) {
       return;
     }
   
-    const now = new Date();
-  
     let timeDeltaMs = this.endOfCountdown.getTime() - this.startOfCountdown.getTime();
     if (timeDeltaMs < 0) {
       timeDeltaMs = 0;
     }
-    let timeLeftMs = this.endOfCountdown.getTime() - now.getTime();
+    let timeLeftMs = this.endOfCountdown.getTime() - Date.now();
     if (timeLeftMs < 0) {
       timeLeftMs = 0;
     }
   
-    const percentCompletion = (
-      timeDeltaMs > 0
-        ? 1.0 - (timeLeftMs / timeDeltaMs)
-        : 0.0
-    ) * 100;
-  
+    const percentCompletion = timeDeltaMs > 0
+      ? (1.0 - (timeLeftMs / timeDeltaMs)) * 100
+      : 0.0;
     progressbarElem.style.width = `${percentCompletion}%`;
     progressbarElem.ariaValueNow = Math.floor(percentCompletion).toString();
+
+    if (timeLeftMs > 0) {
+      const hours = Math.floor(timeLeftMs / 3600_000);
+      const minutes = Math.ceil((timeLeftMs % 3600_000) / 60_000);
+
+      if (hours !== this.lastTickAt.hours || minutes !== this.lastTickAt.minutes) {
+        this.lastTickAt.hours = hours;
+        this.lastTickAt.minutes = minutes;
   
-    const hours = Math.floor(timeLeftMs / 3600_000);
-    const minutes = Math.ceil((timeLeftMs % 3600_000) / 60_000);
-    
-    if (hours > 0) {
-      timeLeftElem.innerText = `${hours} h ${pad(minutes, 2)} min`;
-    }
-    else if (minutes > 0) {
-      timeLeftElem.innerText = `${minutes} min`;
-    }
-    else {
+        const timeLeftStr = hours > 0
+          ? `${hours} h ${pad(minutes, 2)} min`
+          : `${minutes} min`;
+  
+        timeLeftElem.innerText = timeLeftStr;
+
+        // Blinke den Timer alle viertel Stunde und auch bei den letzten 10, 5 und der allerletzten Minute
+        //                         |                                         |
+        //            |------------|                     |-------------------|
+        //            v                                  v
+        if (minutes % 15 === 0 || (hours === 0 && [1, 5, 10].includes(minutes))) {
+          timeLeftElem.classList.add("timer-left-time-blink");
+          showNotification(`Nur noch ${timeLeftStr}!`);
+        } else {
+          timeLeftElem.classList.remove("timer-left-time-blink");
+        }
+      }
+      
+      // Wenn der Countdown noch nicht abgelaufen ist, wiederhole das ganze in einer Sekunde
+      this.timeout = setTimeout(() => timer.tick(), 1000);
+    } else {
       timeLeftElem.innerText = "Zeit abgelaufen";
       timerNochElem.classList.add("timer-noch-text-hide"); // verstecke das "noch" in "noch 0 h 0 min"
-    }
-  
-    // Blinke den Timer alle viertel Stunde
-    if (minutes % 15 === 0) {
       timeLeftElem.classList.add("timer-left-time-blink");
-    }
-    // Blinke den Timer auch bei den letzten 10, 5 und der allerletzten Minute
-    else if (hours === 0 && [1, 5, 10].includes(minutes)) {
-      timeLeftElem.classList.add("timer-left-time-blink");
-    }
-    else {
-      timeLeftElem.classList.remove("timer-left-time-blink");
-    }
-    
-    // Wenn der Countdown noch nicht abgelaufen ist, wiederhole das ganze in einer Sekunde
-    if (timeLeftMs > 0) {
-      this.timeout = setTimeout(() => timer.tick(), 1000);
+
+      showNotification("Zeit abgelaufen!!!");
     }
   },
 
@@ -192,6 +242,8 @@ const timer = {
     clearTimeout(this.timeout);
     this.startOfCountdown = null;
     this.endOfCountdown   = null;
+    this.lastTickAt.hours = Number.POSITIVE_INFINITY;
+    this.lastTickAt.minutes = Number.POSITIVE_INFINITY;
     localStorage.clear();
   
     openDialogButton.innerText = "Setze einen Timer";
