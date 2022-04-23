@@ -20,16 +20,6 @@ main {
   min-height: 100vh;
   margin: 0 auto;
 }
-main::after {
-  display: block;
-  content: "🏳️‍⚧️";
-  position: fixed;
-  bottom: 1rem;
-  left: 1rem;
-  font-size: 2rem;
-  opacity: 0.1;
-  pointer-events: none;
-}
 
 main > * {
   padding: 0 min(4vw, 1.5rem);
