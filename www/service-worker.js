@@ -39,8 +39,6 @@ self.addEventListener("install", (event) => {
  * im Cache liegt, versuche das Netwerk mit der Anfrage zu erreichen.
  */
 self.addEventListener("fetch", (event) => {
-  console.log("[Service Worker] Fetch initiated.....");
-
   event.respondWith(
     caches.open(CACHE)
       .then((cache) => cache.match(event.request))
